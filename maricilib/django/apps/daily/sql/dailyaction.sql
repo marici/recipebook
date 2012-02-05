@@ -1,0 +1,1 @@
+create index daily_dailyaction_user_id_content_type_id_object_id_done_at on daily_dailyaction(user_id, content_type_id, object_id, done_at);

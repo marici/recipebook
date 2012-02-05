@@ -1,0 +1,16 @@
+{% extends "documents/base.html" %}
+
+{% block title %}ドキュメント インデックス{% endblock %}
+
+{% block side %}
+    {% include "documents/side_navi.html" %}
+{% endblock %}
+
+{% block content %}
+    <h2>ドキュメント インデックス</h2>
+    
+    {% with roots as documents %}
+        {% include "documents/index_list.html" %}
+    {% endwith %}
+
+{% endblock %}

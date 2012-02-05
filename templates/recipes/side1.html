@@ -1,0 +1,44 @@
+{% load cache %}
+{% load humanize %}
+{% load thumbnail %}
+
+{% if not user.is_authenticated %}
+    <div class="div_beta01">
+    <p class="p01">
+    <a href="{% url recipes-users-new %}"><img src="/site_media/images/common/btn_member.jpg" alt="メンバー登録" class="swap" /></a>
+    </p>
+{% endif %}
+
+<!-- /div_beta01 --></div>
+{% cache 600 side1 %}
+<div class="div_beta02">
+<h2 class="h2_beta01">注目のメンバー</h2>
+<div class="div_beta02_inner">
+<ul class="ul02">
+{% for up in users_and_profiles %}
+    <li>
+    <a href="{% url recipes-users-show user_id=up.user.id %}">
+    {{ up.user.first_name }}
+    </a> さん
+    </li>
+{% endfor %}
+<!-- /ul02 --></ul>
+<!-- /div_beta02_inner --></div>
+<!-- /div_beta02 --></div>
+
+{% if current_contests %}
+    <div class="div_beta02">
+    <h2 class="h2_beta01">募集中</h2>
+    <div class="div_beta02_inner">
+    <ul class="ul01">
+    {% for contest in current_contests %}
+        <li>
+        <a href="{% url recipes-contests-show contest_id=contest.id %}">{{ contest.name }}</a>
+        (あと {{ contest.left_days }}日)</li>
+    {% endfor %}
+    <!-- /ul01 --></ul>
+    <!-- /div_beta02_inner --></div>
+    <!-- /div_beta02 --></div>
+{% endif %}
+
+{% endcache %}

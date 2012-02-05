@@ -1,0 +1,74 @@
+[
+  {
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "super", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2008-12-25 12:10:42", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "sha1$c58b8$d095e87835538a22893d7328d339ac4d4afece3b", 
+      "email": "devs@marici.co.jp", 
+      "date_joined": "2008-12-25 12:09:57"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "testuser1_at_marici_co_jp", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2008-12-25 11:37:38", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "sha1$867d3$0a23c6fb00623619a399a186ff365e9c5ffcb62e", 
+      "email": "testuser1@marici.co.jp", 
+      "date_joined": "2008-11-21 17:55:37"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "testuser2_at_marici_co_jp", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2008-12-25 11:37:54", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "sha1$31c90$8c0f36c6ec12dc2cba205d9114a556c24333eae2", 
+      "email": "testuser2@marici.co.jp", 
+      "date_joined": "2008-11-21 17:55:37"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "testuser3_at_marici_co_jp", 
+      "first_name": "", 
+      "last_name": "", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2008-12-25 12:11:06", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "sha1$d5472$b370a8979202b2928fac6a3287589c7239564cc3", 
+      "email": "testuser3@marici.co.jp", 
+      "date_joined": "2008-12-25 12:11:06"
+    }
+  }
+]

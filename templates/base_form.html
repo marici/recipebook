@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+    {% if focus_id %}
+        <script type="text/javascript"><!--
+            $(document).ready(function (){
+                $("#{{ focus_id }}").focus();
+            });
+        // --></script>
+    {% endif %}
+{% endblock %}
+
+{% block title %}{{ title }} - {{ current_site.name }}{% endblock %}
+
+{% block content %}
+    <div class="div_alpha14">
+    <h2 class="h2_alpha02">{{ title }}</h2>
+    <div class="div_alpha14_inner">
+    
+	<p class="p01">{{ text|linebreaksbr }}</p>
+    
+	<form method="POST" action="{% if action %}{{ action }}{% else %}.{% endif %}">
+        <table class="tbl01">
+    		{{ form }}
+    	</table>
+		<input type="submit" value="{{ submit_text }}" />
+	</form>
+
+    </div>
+    </div>
+	
+{% endblock %}

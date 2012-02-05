@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="ja" xml:lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<link rel="stylesheet" href="/site_media/css/print.css" type="text/css" />
+<title>{{ recipe.name }} - {{ current_site.name }}</title>
+</head>
+
+<body>
+    <div id="header">
+    <h1><a href="/"><img src="/site_media/images/common/logo.jpg" alt="{{ current_site.name }}" /></a></h1>
+    </div>
+
+    <h2>{{ recipe.name }}</h2>
+    
+    <table class="tbl01">
+    <tr>
+    <td>
+    {% if recipe.sync_photo %}
+        <img width="300" src="{{ recipe.sync_photo.url }}" />
+    {% endif %}
+    </td>
+    <td style="vertical-align:top">
+
+        <p>作成者: {{ recipe.user.first_name }}  さん</p>
+        <p>材料 ({{ recipe.num_people }}人分)
+        {% for name, quantity in recipe.decode_ingredients %}
+            <br/>{{ name }} ... {{ quantity }}
+        {% endfor %}
+     
+    </td>
+    </tr>
+    </table>
+
+    <table class="tbl01">
+    <tr>
+    </tr>
+    <tr>
+        <th>作り方</th>
+        <td>
+        <ul>
+        {% for direction in recipe.ordered_directions %}
+            <li>
+            {% if direction.photo %}<img style="float:right" src="{{ direction.photo.url }}" alt="" />{% endif %}
+            <strong>{{ forloop.counter }}.</strong> {{ direction.text }}
+            </li>
+        {% endfor %}
+        </ul>
+        </td>
+    </tr>
+    <tr>
+        <th>ヒント、コツ</th>
+        <td>{{ recipe.tips|linebreaksbr }}</td>
+    </tr>
+    <!-- /tbl01 --></table>
+    
+    <div id="footer">
+    <div id="footer_inner">
+    
+    <address>
+    Copyright © 2008 MDS / Powered by Marici
+    </address>
+    
+    </div>
+    </div>
+
+</body>
+</html>

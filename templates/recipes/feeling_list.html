@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    &laquo; <a href="/">トップページ</a>
+    <h1>フィーリング</h1>
+    <ul>
+        {% for obj in object_list %}
+            <li>
+                {{ obj.name }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

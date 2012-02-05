@@ -1,0 +1,17 @@
+<table summary="レシピを募集中のお題" class="tbl02">
+    <tr>
+        <th>募集期間</th>
+        <td>{{ contest.published_at|date:"n月j日 G:i" }} から
+            {{ contest.closed_at|date:"n月j日 G:i" }} まで</td>
+    </tr>
+    <tr>
+        <th>
+            {% if contest.is_finished %}
+                結果発表日
+            {% else %}
+                結果発表予定日
+            {% endif %}
+        </th>
+        <td>{{ contest.finished_at|date:"n月j日 G:i" }}</td>
+    </tr>
+</table>

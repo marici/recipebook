@@ -1,0 +1,6 @@
+{% autoescape off %}
+レシピ投稿でエラーが起こりました。
+
+{{ error }}
+
+{% endautoescape %}

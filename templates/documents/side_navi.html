@@ -1,0 +1,29 @@
+<div class="div_beta02">
+<h2 class="h2_beta01">ナビゲーション</h2>
+<div class="div_beta02_inner">
+<ul class="ul01">
+{% for sibling in siblings %}
+    {% ifequal sibling document %}
+        <li><strong>{{ sibling.title }}</strong></li>
+        {% if children %}
+            <ul>
+                {% for child in children %}
+                    <li>&nbsp;&nbsp;
+                        <a href="{% url documents-show label=child.label %}">
+                            {{ child.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% else %}
+        <li>
+            <a href="{% url documents-show label=sibling.label %}">
+                {{ sibling.title }}
+            </a>
+        </li>
+    {% endifequal %}
+{% endfor %}
+<!-- /ul01 --></ul>
+<!-- /div_beta02_inner --></div>
+<!-- /div_beta02 --></div>

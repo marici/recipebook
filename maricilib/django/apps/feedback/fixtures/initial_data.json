@@ -1,0 +1,23 @@
+[
+  {
+    "pk": 1, 
+    "model": "feedback.feedbackcategory", 
+    "fields": {
+      "name": "\u3054\u8981\u671b"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "feedback.feedbackcategory", 
+    "fields": {
+      "name": "\u3054\u8cea\u554f"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "feedback.feedbackcategory", 
+    "fields": {
+      "name": "\u4e0d\u5177\u5408\u306e\u5831\u544a"
+    }
+  }
+]

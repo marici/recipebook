@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %}コメント一覧 - {{ current_site.name }}{% endblock %}
+
+{% block extrahead %}
+    <script type="text/javascript" src="/site_media/javascript/comments.js"></script>
+{% endblock %}
+
+{% block content %}
+    <p class="p_person">&laquo; <a href="{% url recipes-users-home %}">ホーム</a></a></p>
+
+    <ul class="ul_navi_func02">
+    {% if only_not_moderated %}
+        <li class="lastChild"><a href="{% url recipes-users-home-comments %}">全て表示</a></li>
+    {% else %}
+        <li class="lastChild"><a href="{% url recipes-users-home-comments-noapproval %}">未承認のコメントのみ表示</a></li>
+    {% endif %}
+    </ul>
+
+    <div class="div_alpha14">
+    <h2 class="h2_alpha02">受け取ったコメントの一覧</h2>
+    
+    {% if not page_obj.object_list %}
+        <div class="div_alpha14_inner">
+        <p class="p02">コメントがありません。</p>
+        </div>
+        </div>
+    {% endif %}
+    
+    {% for comment in page_obj.object_list %}
+        {% if not forloop.first %}
+            <div class="div_alpha14">
+        {% endif %}
+        <h3>「<a href="{% url recipes-show recipe_id=comment.recipe_id %}">{{ comment.recipe.name }}</a>」への
+            <a href="{% url recipes-users-show user_id=comment.user_id %}">{{ comment.user.first_name }}</a> さんのコメント
+            ({{ comment.created_at|date:"Y年n月j日 G:i" }})</h3>
+        <div class="div_alpha14_inner comment">
+        <ul class="ul_navi_func02">
+        {% if not comment.is_moderated %}
+            <li class="approveCommentButton">
+                <a class="ajaxLink cb_doneApproveComment" href="{% url recipes-comment-approve comment_id=comment.id %}">承認する</a></li>
+        {% endif %}
+        <li class="deleteCommentButton lastChild">
+            <a class="ajaxLink pre_confirmDeleteComment cb_doneDeleteComment" href="{% url recipes-comment-delete comment_id=comment.id %}">削除する</a></li>
+        </ul>
+        <div class="div03">
+        {% if comment.photo %}
+            <img src="{{ comment.photo|thumbnail:"150x150" }}" />
+        {% endif %}
+        <p class="p02">{{ comment.text|linebreaksbr }}</p>
+        </div>
+        </div>
+        </div>
+    {% endfor %}
+    
+    {% include "paginator.html" %}
+
+{% endblock %}

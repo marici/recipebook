@@ -1,0 +1,137 @@
+/* --------------------------------------------------
+	clearfix
+-------------------------------------------------- */
+/* .pkg class wraps enclosing block element around inner floated elements */
+.pkg:after {content: " ";display:block;visibility:hidden;clear:both;height:0.1px;font-size:0.1em;line-height:0;}
+
+/* no ie mac \*/
+.pkg { display: block; }
+/* */
+
+
+/* --------------------------------------------------
+	Initialized
+-------------------------------------------------- */
+/* HTML tag styles */
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fildset,input,textarea,p,blockquote,table,th,td,address{
+margin:0;
+padding:0;
+color:#666666;
+font-style:normal;
+font-size:12px;
+line-height:1.6;
+}
+
+div {
+}
+
+table{border-collapse:collapse;border-spacing:0;}
+
+textarea,input{margin:0;padding:0;}
+
+caption,th{text-align:left;}
+td,th{vertical-align: top; color:#666666; line-height:1.6; }
+
+dd,dt,td,th, {
+*line-height:1.2;
+}
+
+fieldset,img,abbr{border:none;}
+li{list-style-type:none;}
+hr{display:none;}
+
+a,a:link{color:#3399ff;text-decoration:none;}
+a:visited{color:#3399ff;}
+a:hover{color:#3399ff;text-decoration:underline;}
+
+strong{font-weight:bold;}
+
+img {vertical-align:bottom;}
+
+body {
+font-family: verdana,"ＭＳ Ｐゴシック","MS PGothic",Sans-Serif,"ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro",Osaka;
+text-align:center;
+font-size:12px;
+color: #666666;
+margin:0;
+padding:0;
+background:#ffffff url(/site_media/images/common/bg_body.jpg) center 0 repeat-x;
+}
+
+
+/* --------------------------------------------------
+	Layout
+-------------------------------------------------- */
+
+/* cotntainer
+-------------------------------------------------- */
+#container { width:900px; margin:0 auto;}
+#container_inner { text-align:left;}
+
+/* pagebody
+-------------------------------------------------- */
+#pagebody {}
+#pagebody_inner {}
+
+/* header
+-------------------------------------------------- */
+#header { position:relative; height:154px; background:url(/site_media/images/common/bg_header.jpg) 355px 0 no-repeat;}
+#header_inner {}
+
+#header h1 { position:absolute; top:35px; left:14px;}
+#header .pr { position:absolute; top:85px; left:53px; color:#006600; font-weight:bold;}
+
+#header .form01 {position:absolute; top:87px; left:688px; width:223px;}
+#header .form01 .ipt01 {line-height:12px; height:14px; margin:0; padding:4px 2px; border:1px solid #cccccc; width:164px; vertical-align:top;}
+
+		* html #header .form01 .ipt01 { height:24px; padding:6px 2px 0;} /* for IE6 */
+		*+html #header .form01 .ipt01 { padding:6px 2px 2px;} /* for IE7 */
+
+#header .form01 .ipt01 {}
+
+#header .ul01 { position:absolute; bottom:0px; left:0px; width:323px;}
+
+#header .ul01 li { float:left;}
+#header .ul01 li a {display:block; height:35px; overflow:hidden; text-indent:-9999px;}
+
+#header .ul01 .li01 a { background:url(/site_media/images/common/btn_glnavi01.jpg) 0 0 no-repeat; width:79px;}
+#header .ul01 .li02 a { background:url(/site_media/images/common/btn_glnavi02.jpg) 0 0 no-repeat; width:113px;}
+#header .ul01 .li03 a { background:url(/site_media/images/common/btn_glnavi03.jpg) 0 0 no-repeat; width:125px;}
+
+#header .ul01 .li01 a:hover { background:url(/site_media/images/common/btn_glnavi01_on.jpg) 0 0 no-repeat;}
+#header .ul01 .li02 a:hover { background:url(/site_media/images/common/btn_glnavi02_on.jpg) 0 0 no-repeat;}
+#header .ul01 .li03 a:hover { background:url(/site_media/images/common/btn_glnavi03_on.jpg) 0 0 no-repeat;}
+
+#header .ul02 { position:absolute; bottom:5px; right:15px; width:450px; text-align:right;}
+
+#header .ul02 li { display:inline; line-height:30px; padding-right:10px;}
+#header .ul02 li a { color:#ffffff;}
+
+/* wrapper
+-------------------------------------------------- */
+#wrapper {padding-top:12px; padding-bottom:30px; zoom: 1;}
+#wrapper_inner {}
+#wrapper_inner:after {content: " ";display:block;visibility:hidden;clear:both;height:0.1px;font-size:0.1em;line-height:0;}
+
+/* alpha
+-------------------------------------------------- */
+#alpha { width:640px; float:left; overflow:hidden;}
+#alpha_inner {}
+
+/* beta
+-------------------------------------------------- */
+#beta { width:240px; float:right;}
+#beta_inner {}
+
+/* footer
+-------------------------------------------------- */
+#footer { clear:both; padding-bottom:30px;}
+#footer_inner {}
+
+#footer .ul01 { text-align:center; margin-bottom:5px;}
+#footer .ul01 li { display:inline; padding-left:10px;}
+#footer .ul01 .li00 { padding-left:0px;}
+#footer .ul01 li a { color:#666666;}
+
+#footer address { text-align:center;}
+

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block extrastyle %}
+    <style>
+        .ingredientRow {
+            cursor: move;
+        }
+        #directionList li {
+            cursor: move;
+        }
+    </style>
+{% endblock %}
+
+{% block extrahead %}
+    <script type="text/javascript" src="/site_media/javascript/edit_recipe.js"></script>
+{% endblock %}
+
+{% block content %}
+    <ul class="ul_navi_func">
+    <li class="li02"><a href="{% url recipes-show recipe_id=recipe.id %}">
+        確認する</a></li>
+    </ul>
+    
+    <div class="div_alpha14">
+    <h2 class="h2_alpha02">レシピの編集</h2>
+    <h3>基本情報</h3>
+    <div class="div_alpha14_inner">
+    
+	<form id="mainForm" method="POST" enctype="multipart/form-data" action="{% url recipes-edit recipe_id=recipe.id %}">
+	    {% if recipe.photo %}
+            <p class="p01"><img width="200" src="{{ recipe.photo|thumbnail:"200x500" }}" /></p>
+	    {% endif %}
+	    <table class="tbl03">
+	        {{ form.as_table }}
+        <tr>
+        <th>素材と分量<br />
+        （ドラッグして並べ替えることができます）<br /><a class="addIngredientRowsLink" href="#">入力欄を追加</a></th>
+        
+        <td>
+        <ul id="ingredientTable" class="ul02 ingredientTableBody">
+        {% for name, quantity in recipe.decode_ingredients %}
+            <li class="ingredientRow">
+            <a class="deleteIngredientLink" href="#"><img class="img01" src="/site_media/images/common/btn_delete.gif" alt="削除" /></a>
+            {{ name }} ... <input type="hidden" name="food" value="{{ name }}" />
+            {{ quantity }}<input type="hidden" name="quantity" value="{{ quantity }}" />
+            </li>
+        {% endfor %}
+        <li class="ingredientRow">
+        素材: <input type="text" name="food" /> ...
+        分量: <input type="text" name="quantity" />
+        </li>
+        <li class="ingredientRow">
+        素材: <input type="text" name="food" /> ...
+        分量: <input type="text" name="quantity" />
+        </li>
+        <li class="ingredientRow">
+        素材: <input type="text" name="food" /> ...
+        分量: <input type="text" name="quantity" />
+        </li>
+        </ul>
+        </td>
+        
+        </tr>
+	    </table>
+	
+        
+        <input type="submit" value="保存" />
+	</form>
+    
+    </div>
+    </div>
+	
+    <div class="div_alpha14">
+    <h3>作り方（ドラッグして並べ替えることができます）</h3>
+    <div class="div_alpha14_inner">
+    
+	<ul id="directionList" class="ul02">
+        {% for direction in directions %}
+	   	    <li id="direction_{{ direction.id }}" class="directionData">
+                <a class="editDirectionLink" href="{% url recipes-direction-edit recipe_id=recipe.id,direction_id=direction.id %}">
+                    <img class="img01" src="/site_media/images/common/btn_edit.gif" alt="編集" /></a>
+                <a class="ajaxLink cb_doneDeleteDirection"
+                    href="{% url recipes-direction-delete recipe_id=recipe.id,direction_id=direction.id %}">
+                    <img class="img01" src="/site_media/images/common/btn_delete.gif" alt="削除" /></a>
+                {% if direction.photo %}
+                    <img src="{{ direction.photo.url }}" />
+                {% endif %}
+                <span class="directionText">{{ direction.text }}</span>
+                <textarea class="directionInput" cols="50" rows="2" style="display:none">{{ direction.text }}</textarea>
+            </li>
+	    {% endfor %}
+	</ul>
+	
+	<form id="directionForm"
+        method="POST"
+        enctype="multipart/form-data" 
+        action="{% url recipes-direction-register recipe_id=recipe.id %}{% now "YmdHis" %}">
+        <table class="tbl03">
+    		{{ direction_form.as_table }}
+        </table>
+		<input type="submit" value="追加" />
+	</form>
+	
+    <input type="hidden" id="sortDirectionsUrl" value="{% url recipes-direction-sort recipe_id=recipe.id %}" />
+    <input type="hidden" id="deleteDirectionUrl" value="{% url recipes-direction-delete-dummy recipe_id=recipe.id %}" />
+    <input type="hidden" id="editDirectionUrl" value="{% url recipes-direction-edit-dummy recipe_id=recipe.id %}" />
+    
+    </div>
+    </div>
+    
+{% endblock %}
+

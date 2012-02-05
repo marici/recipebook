@@ -1,0 +1,1 @@
+create index recipes_favoriterecipe_user_id_created_at on recipes_favoriterecipe(user_id, created_at);

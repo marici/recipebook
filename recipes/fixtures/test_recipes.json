@@ -1,0 +1,161 @@
+[
+  {
+    "pk": 1, 
+    "model": "recipes.contest", 
+    "fields": {
+      "comment": null, 
+      "producer": null, 
+      "finished_at": "2009-01-15 12:00:00", 
+      "image": "", 
+      "published_at": "2008-12-20 12:00:00", 
+      "dish": null, 
+      "closed_at": "2008-12-31 12:00:00", 
+      "ingredients": [], 
+      "reviewing_photo5": "", 
+      "reviewing_photo4": "", 
+      "reviewing_photo3": "", 
+      "reviewing_photo2": "", 
+      "reviewing_photo1": "", 
+      "description": "\u30c6\u30b9\u30c8\u3002", 
+      "is_reviewing": false, 
+      "royalty": 10, 
+      "name": "Test Contest 1", 
+      "created_at": "2008-11-22 07:30:35", 
+      "is_finished": false, 
+      "feeling": null
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "recipes.reviewedcontest", 
+    "fields": {
+      "name": "\u5be9\u67fb\u3057\u3066\u3044\u306a\u3044\u304a\u984c", 
+      "contest": null
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "recipes.userprofile", 
+    "fields": {
+      "level": 1, 
+      "profile_text": null, 
+      "blog_url": null, 
+      "icon": "", 
+      "icon_s3": "", 
+      "created_at": "2008-12-25 11:37:38", 
+      "deny_mail_magazine": false, 
+      "deny_comment": false, 
+      "karma": 1, 
+      "validation_key": null, 
+      "pending_email": null, 
+      "icon_s3_sync": false, 
+      "vote_point": 1, 
+      "user": 2, 
+      "alter_email": null, 
+      "is_female": true, 
+      "prefecture": null, 
+      "key_issued_at": null, 
+      "birth_year": null
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "recipes.userprofile", 
+    "fields": {
+      "level": 1, 
+      "profile_text": null, 
+      "blog_url": null, 
+      "icon": "", 
+      "icon_s3": "", 
+      "created_at": "2008-12-25 11:37:54", 
+      "deny_mail_magazine": false, 
+      "deny_comment": false, 
+      "karma": 1, 
+      "validation_key": null, 
+      "pending_email": null, 
+      "icon_s3_sync": false, 
+      "vote_point": 1, 
+      "user": 3, 
+      "alter_email": null, 
+      "is_female": true, 
+      "prefecture": null, 
+      "key_issued_at": null, 
+      "birth_year": null
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "recipes.userprofile", 
+    "fields": {
+      "level": 1, 
+      "profile_text": null, 
+      "blog_url": null, 
+      "icon": "", 
+      "icon_s3": "", 
+      "created_at": "2008-12-25 11:37:54", 
+      "deny_mail_magazine": false, 
+      "deny_comment": false, 
+      "karma": 1, 
+      "validation_key": null, 
+      "pending_email": null, 
+      "icon_s3_sync": false, 
+      "vote_point": 1, 
+      "user": 4, 
+      "alter_email": null, 
+      "is_female": true, 
+      "prefecture": null, 
+      "key_issued_at": null, 
+      "birth_year": null
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "recipes.recipe", 
+    "fields": {
+      "photo": "", 
+      "updated_at": "2008-11-22 07:31:38", 
+      "published_at": null, 
+      "is_awarded": false, 
+      "reviewed_contest": null, 
+      "ingredients": "", 
+      "introduction": "\u30ec\u30b7\u30d4", 
+      "score": 0, 
+      "num_people": 2, 
+      "tips": null, 
+      "photo_s3_sync": false, 
+      "user": 2, 
+      "num_moderated_comments": 0, 
+      "is_draft": false, 
+      "name": "Test Recipe 1", 
+      "created_at": "2008-11-22 07:31:38", 
+      "contest": null, 
+      "feeling": null, 
+      "photo_s3": ""
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "recipes.recipe", 
+    "fields": {
+      "photo": "", 
+      "updated_at": "2008-11-22 07:38:21", 
+      "published_at": null, 
+      "is_awarded": false, 
+      "reviewed_contest": null, 
+      "ingredients": "", 
+      "introduction": "\u3042\u3042\u3042", 
+      "score": 0, 
+      "num_people": 2, 
+      "tips": "", 
+      "photo_s3_sync": false, 
+      "user": 3, 
+      "num_moderated_comments": 0, 
+      "is_draft": false, 
+      "name": "Test Recipe 2", 
+      "created_at": "2008-11-22 07:38:21", 
+      "contest": 1, 
+      "feeling": null, 
+      "photo_s3": ""
+    }
+  }
+]

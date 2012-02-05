@@ -1,0 +1,22 @@
+{% extends "sitenews/base.html" %}
+
+{% block title %}ニュース一覧{% endblock %}
+
+{% block content %}
+    <h1>ニュース一覧</h1>
+    
+    <ul class="sitenews">
+        {% for sitenews in page_obj.object_list %}
+            <li class="sitenews">
+                {{ sitenews.published_at|date:"n月j日" }}
+                {% if sitenews.has_detail %}
+                    <a href="{% url sitenews-show news_id=sitenews.id %}">{{ sitenews.title }}</a>
+                {% else %}
+                    {{ sitenews.title }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    
+    {% include "paginator.html" %}
+{% endblock %}

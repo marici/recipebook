@@ -1,0 +1,6 @@
+{% autoescape off %}
+メールでのレシピ投稿を受け付けました。ありがとうございました。
+
+レシピ名: {{ recipe.name }}
+
+{% endautoescape %}

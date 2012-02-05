@@ -1,0 +1,26 @@
+{% if documents %}
+    <div class="document-index">
+        <ul>
+            {% for document in documents %}
+                <li>
+                    <a href="{% url documents-show label=document.label %}">
+                        {{ document.title }}
+                    </a>
+                </li>
+                {% with document.children as children %}
+                    {% if children %}
+                        <ul>
+                            {% for child in children %}
+                                <li>&nbsp;&nbsp;
+                                    <a href="{% url documents-show label=child.label %}">
+                                        {{ child.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

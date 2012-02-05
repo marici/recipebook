@@ -1,0 +1,24 @@
+{% extends "sitenews/base.html" %}
+
+{% block title %}ニュース - {{ sitenews.title }}{% endblock %}
+
+{% block content %}
+    <h1>ニュース - {{ sitenews.title }}</h1>
+    
+    <p class="sitenews_date">{{ sitenews.published_at|date:"n月j日" }}</p>
+    
+    {% if sitenews.image %}
+        <div class="sitenews_image">
+            <img src="{{ sitenews.image.url }}" />
+        </div>
+    {% endif %}
+        
+    <div class="sitenews_text">
+        <p>{{ sitenews.text }}</p>
+    </div>
+    
+    {% if sitenews.url %}
+        <p class="sitenews_url"><a href="{{ sitenews.url }}">{{ sitenews.url }}</a></p>
+    {% endif %}
+    
+{% endblock %}

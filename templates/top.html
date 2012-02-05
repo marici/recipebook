@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load cache %}
+{% load sitenews %}
+{% load thumbnail %}
+{% load textja %}
+
+{% block content %}
+{% cache 300 top_content %}
+
+{% if featured_contest and current_contests %}
+    <div class="div_alpha10">
+    
+    <h2>
+        <img src="/site_media/images/index/h2_01.jpg" alt="レシピを募集中のお題" />
+        <span class="spn01"><a href="{% url recipes-contests-current %}"><img src="/site_media/images/common/btn_readall.jpg" alt="全て見る" class="swap" /></a></span>
+    </h2>
+    
+    {% if featured_contest %}
+        <div class="div_alpha10_inner">
+        
+        <h3><a href="{% url recipes-contests-show contest_id=featured_contest.id %}">{{ featured_contest.name }}</a><span class="spn01">
+        <a href="{% url recipes-contests-recipes contest_id=featured_contest.id %}">投稿レシピ{{ featured_contest.open_recipes.count }}件</a></span></h3>
+        <p class="p01">{{ featured_contest.description|abbr:150 }}</p>
+        
+        <div class="div01">
+        {% for recipe in featured_contest.featured_recipes %}
+            <dl class="dl01">
+            <dt><a href="{% url recipes-show recipe_id=recipe.id %}">{{ recipe.name }}</a></dt>
+            <dd>{% if recipe.photo %}<a href="{% url recipes-show recipe_id=recipe.id %}">
+                <img src="{{ recipe.photo|thumbnail:"70x70" }}" alt="{{ recipe.name }}" /></a>{% endif %}</dd>
+            {% with recipe.user as owner %}
+                <dd>by <a href="{% url recipes-users-show user_id=owner.id %}">{{ owner.first_name }}</a> さん</dd>
+            {% endwith %}
+            <dd>{{ recipe.introduction|abbr:30 }}</dd>
+            <!-- /dl01 --></dl>
+        {% endfor %}
+        <!-- /div01 --></div>
+        
+        <!-- /div_alpha10_inner --></div>
+            
+    {% endif %}
+    
+    <!-- /div_alpha10 --></div>
+    
+    <div class="div_alpha11">
+    
+    {% for contest in current_contests %}
+    {% ifnotequal contest featured_contest %}
+        <div class="{% cycle 'div01' 'div02' %}">
+        <div class="{% cycle 'div01_inner' 'div02_inner' %}">
+        
+        <h3>
+        <a href="{% url recipes-contests-show contest_id=contest.id %}">{{ contest.name }}</a>
+        <span class="spn01"><a href="{% url recipes-contests-recipes contest_id=contest.id %}">投稿レシピ {{ contest.open_recipes.count }} 件</a></span>
+        </h3>
+        <p class="p01">{{ contest.description|abbr:70 }}</p>
+        
+        <!-- /div0n_inner --></div>
+        <!-- /div0n --></div>
+    {% endifnotequal %}
+    {% endfor %}
+    
+    <!-- /div_alpha11 --></div>
+{% endif %}
+
+{% if closed_contests %}
+<div class="div_alpha12">
+<h2>
+    <img src="/site_media/images/index/h2_02.jpg" alt="今までのお題と受賞レシピ" />
+    <span class="spn01"><a href="{% url recipes-contests-closed %}"><img src="/site_media/images/common/btn_readall.jpg" alt="全て見る" class="swap" /></a></span>
+</h2>
+<div class="div01">
+
+{% for contest in closed_contests %}
+    <dl class="dl01">
+    <dt><a href="{% url recipes-contests-show contest_id=contest.id %}">{{ contest.name }}</a></dt>
+    {% if contest.is_really_finished %}
+    {% with contest.awarded_recipe as recipe %}
+    {% if recipe %}
+        <dd class="dd01">{% if recipe.photo %}<a href="{% url recipes-show recipe_id=recipe.id %}">
+            <img width=98" src="{{ recipe.photo|thumbnail:"98x98" }}" alt="{{ recipe.name }}" /></a>{% endif %}</dd>
+        <dd class="dd02"><a href="{% url recipes-show recipe_id=recipe.id %}">{{ recipe.name }}</a></dd>
+        <dd class="dd03">by <a href="{% url recipes-users-show user_id=recipe.user_id %}">{{ recipe.user.first_name }}</a> さん</dd>
+        <dd class="dd05"><a href="/about/#shop"><img src="/site_media/images/common/icon_awardedstatus.jpg" /></a>{{ recipe.introduction|abbr:30 }}
+    {% else %}
+        <dd class="dd01">{% if contest.image %}<a href="{% url recipes-contests-show contest_id=contest.id %}"><img width="98" src="{{ contest.image|thumbnail:"129x129" }}" alt="{{ contest.name }}" /></a>{% endif %}</dd>
+        <dd class="dd02" style="text-align:center"><a href="{% url recipes-contests-recipes contest_id=contest.id %}">投稿レシピ{{ contest.open_recipes.count }}件</a></dd>
+        <dd class="dd03">残念ながら、受賞レシピはありませんでした。</dd>
+    {% endif %}
+    {% endwith %}
+    {% else %}
+        <dd class="dd01">{% if contest.image %}<a href="{% url recipes-contests-show contest_id=contest.id %}"><img width="98" src="{{ contest.image|thumbnail:"129x129" }}" alt="{{ contest.name }}" /></a>{% endif %}</dd>
+        <dd class="dd02" style="text-align:center"><a href="{% url recipes-contests-recipes contest_id=contest.id %}">投稿レシピ{{ contest.open_recipes.count }}件</a><br /><img src="/site_media/images/common/reviewing.png" alt="審査中"></dd>
+        <dd class="dd03">{{ contest.finished_at|date:"n月j日 G:i" }}<br />
+        結果発表予定です。</dd>
+    {% endif %}
+    <!-- /dl01 --></dl>
+{% endfor %}
+
+<!-- /div01 --></div>
+<!-- /div_alpha12 --></div>
+{% endif %}
+
+<div class="div_alpha12">
+<h2>
+    <img src="/site_media/images/index/h2_03.jpg" alt="レシピを探す" />
+</h2>
+
+<h3><img src="/site_media/images/index/h3_01.jpg" alt="フィーリングで探す" /></h3>
+<ul class="ul01">
+<li><a href="/search?query=%E6%97%AC%E3%81%AE%E6%96%99%E7%90%86%EF%BC%88%E6%98%A5%EF%BC%89"><img src="/site_media/images/index/spring.jpg" class="swap" alt="春の料理" /></a></li>
+<li><a href="/search?query=%E3%83%98%E3%83%AB%E3%82%B7%E3%83%BC"><img src="/site_media/images/index/bnr_01.jpg" class="swap" alt="ヘルシー" /></a></li>
+<li><a href="/search?query=%E5%AD%90%E4%BE%9B%E5%90%91%E3%81%91"><img src="/site_media/images/index/bnr_02.jpg" class="swap" alt="子供向け" /></a></li>
+<li><a href="/search?query=%E3%83%91%E3%83%BC%E3%83%86%E3%82%A3"><img src="/site_media/images/index/party.jpg" class="swap" alt="パーティ" /></a></li>
+<li><a href="/search?query=%E3%82%B9%E3%83%91%E3%82%A4%E3%82%B7%E3%83%BC"><img src="/site_media/images/index/spicy.jpg" class="swap" alt="スパイシー" /></a></li>
+<li><a href="/search/?query=%E5%90%84%E5%9B%BD%E3%83%BB%E9%83%B7%E5%9C%9F%E6%96%99%E7%90%86"><img src="/site_media/images/index/local.jpg" class="swap" alt="各国・郷土料理" /></a></li>
+<!-- /ul01 --></ul>
+
+<h3><img src="/site_media/images/index/h3_03.jpg" alt="人気の食材" /></h3>
+<ul class="ul01">
+<li><a href="/ingcategory/1"><img src="/site_media/images/index/bnr_09.jpg" class="swap" alt="野菜" /></a></li>
+<li><a href="/ingcategory/2"><img src="/site_media/images/index/bnr_10.jpg" class="swap" alt="魚" /></a></li>
+<li><a href="/ingcategory/3"><img src="/site_media/images/index/bnr_11.jpg" class="swap" alt="肉" /></a></li>
+<!-- /ul01 --></ul>
+<!-- /div_alpha12 --></div>
+
+<div class="div_alpha13">
+<h2>
+    <img src="/site_media/images/index/h2_04.jpg" alt="お知らせ" />
+    <span class="spn01"><a href="{% url sitenews-showlist %}"><img src="/site_media/images/common/btn_readall.jpg" alt="全て見る" class="swap" /></a></span>
+</h2>
+
+<div class="div01">
+<div class="div01_inner">
+
+{% get_sitenews_list reverse True %}
+<ul class="sitenews">
+{% for sitenews in sitenews_list %}
+    <li>
+    {{ sitenews.published_at|date:"n月j日" }} 
+    {% if sitenews.has_detail %}
+        <a href="{% url sitenews-show news_id=sitenews.id %}">
+        {{ sitenews.title }}
+        </a>
+    {% else %}
+        {{ sitenews.title }}
+    {% endif %}
+    </li>
+{% endfor %}
+</ul>
+
+<!-- /div01_inner --></div>
+<!-- /div01 --></div>
+<!-- /div_alpha13 --></div>
+
+{% endcache %}
+{% endblock %}

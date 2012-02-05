@@ -1,0 +1,8 @@
+{% autoescape off %}
+フィードバックが投稿されました。
+
+ユーザ: {{ feedback.user }}
+種類: {{ feedback.category }}
+パス: {{ feedback.path }}
+本文: {{ feedback.text }}
+{% endautoescape %}

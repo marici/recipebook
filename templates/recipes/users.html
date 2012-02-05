@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ current_site.name }}{% endblock %}
+{% block content %}
+    {% if links %}
+        <p class="p_person">
+        {% for link in links %}
+            &laquo; <a href="{{ link.url }}">{{ link.name }}</a>
+        {% endfor %}
+        </p>
+    {% endif %}
+    
+    <div class="div_alpha07">
+    <h2 class="h2_alpha01">{{ title }}</h2>
+    
+    <div class="div_alpha07_inner">
+    {% for up in users_and_profiles %}
+        <dl class="dl01">
+        <dt><a href="{% url recipes-users-show user_id=up.user.id %}">
+        {% if up.profile.icon %}
+            <img height="60" src="{{ up.profile.icon.url }}" alt="{{ up.user.first_name }}" title="{{ up.user.first_name }}" />
+        {% else %}
+            <img src="/site_media/images/common/noimage.jpg" alt="{{ up.user.first_name }}" title="{{ up.user.fistname }}" />
+        {% endif %}
+        </a></dt>
+        <dd class="dd01"><a href="{% url recipes-users-show user_id=up.user.id %}">{{ up.user.first_name }}</a> さん</dd>
+        </dl>
+    {% endfor %}
+    </div>
+    
+    </div>
+
+{% endblock %}

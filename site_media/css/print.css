@@ -1,0 +1,53 @@
+/* --------------------------------------------------
+	clearfix
+-------------------------------------------------- */
+/* .pkg class wraps enclosing block element around inner floated elements */
+.pkg:after {content: " ";display:block;visibility:hidden;clear:both;height:0.1px;font-size:0.1em;line-height:0;}
+
+/* no ie mac \*/
+.pkg { display: block; }
+/* */
+
+
+/* --------------------------------------------------
+    Initialized
+-------------------------------------------------- */
+/* HTML tag styles */
+fieldset,img,abbr{border:none;}
+li{list-style-type:none;}
+
+a,a:link{color:#3399ff;text-decoration:none;}
+a:visited{color:#3399ff;}
+a:hover{color:#3399ff;text-decoration:underline;}
+
+strong{font-weight:bold;}
+
+img {vertical-align:bottom;}
+
+body {
+font-family: verdana,"ＭＳ Ｐゴシック","MS PGothic",Sans-Serif,"ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro",Osaka;
+font-size:12px;
+color: #000000;
+}
+
+/* --------------------------------------------------
+	Layout
+-------------------------------------------------- */
+
+/* footer
+-------------------------------------------------- */
+#footer { clear:both; padding-bottom:30px;}
+#footer_inner {}
+
+#footer .ul01 { text-align:center; margin-bottom:5px;}
+#footer .ul01 li { display:inline; padding-left:10px;}
+#footer .ul01 .li00 { padding-left:0px;}
+#footer .ul01 li a { color:#666666;}
+
+#footer address { text-align:center;}
+
+.tbl01 {margin: 0 10px 10px;}
+.tbl01 th,
+.tbl01 td {text-align: left; vertical-align: top; font-weight: normal;}
+.tbl01 th {width: 95px; _width: 105px; padding: 5px 5px 5px 10px; }
+.tbl01 td {width: 320px; _width: 345px; padding: 5px 5px 5px 25px; }

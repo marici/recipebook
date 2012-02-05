@@ -1,0 +1,55 @@
+# coding: utf-8
+"""
+The MIT License
+
+Copyright (c) 2009 Marici, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+"""
+from django.db import models
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
+from django.contrib.auth.models import User
+import managers
+
+class DailyScore(models.Model):
+    objects = managers.DailyScoreManager()
+
+    score = models.IntegerField(u"スコア")
+    scored_at = models.DateField(u"スコア加算日", auto_now_add=True)
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey()
+    
+    def __unicode__(self):
+        return self.content_object.__unicode__()
+
+
+class DailyAction(models.Model):
+    objects = managers.DailyActionManager()
+    
+    user = models.ForeignKey(User, verbose_name=u"ユーザ", 
+                             editable=False)
+    action = models.CharField(u"アクション", max_length=30)
+    num_times = models.IntegerField(u"回数", default=1)
+    done_at = models.DateField(u"日付", auto_now_add=True)
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey()
+    

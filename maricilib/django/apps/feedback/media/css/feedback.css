@@ -1,0 +1,11 @@
+/* feedback button style */
+
+#div_feedback_button {
+    position: absolute;
+    bottom: 0;
+    left; 0;
+}
+
+html>body #div_feedback_button {
+    position: fixed;
+}

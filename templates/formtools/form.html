@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if form.errors %}
+        <h1>内容に問題があります。訂正してください。</h1>
+    {% else %}
+        <h1>作成</h1>
+    {% endif %}
+    
+    <form action="" method="POST">
+        <table>
+            {{ form }}
+        </table>
+        <input type="hidden" name="{{ stage_field }}" value="1" />
+        <p><input type="submit" value="Preview" /></p>
+    </form>
+
+{% endblock %}

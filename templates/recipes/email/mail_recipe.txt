@@ -1,0 +1,17 @@
+{% autoescape off %}
+{{ user.first_name }} 様
+
+「{{ recipe.name }}」 (by {{ recipe.user.first_name }}さん) の作り方をお知らせします。
+
+= 材料 =
+{% for name, quantity in recipe.decode_ingredients %}{{ name }} - {{ quantity }}
+{% endfor %}
+
+= 作り方 =
+{% for direction in recipe.direction_set.all %}{{ forloop.counter }}. {{ direction.text }}
+{% endfor %}
+
+{% if recipe.tips %}= コツ =
+{{ recipe.tips }}
+{% endif %}
+{% endautoescape %}

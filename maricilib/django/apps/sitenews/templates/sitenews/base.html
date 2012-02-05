@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Script-Type" content="text/javascript" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/site_media/css/base.css" type="text/css" media="all" />
+    {% block extrahead %}{% endblock %}
+</head>
+
+<body>
+    <div id="all">
+        <div id="header">
+        </div>
+    
+        <div id="container">
+            <div id="main">
+                {% block content %}{% endblock %}
+            </div>
+    
+            <div id="side">
+            </div>
+        </div>
+    
+        <div id="footer">
+        </div>
+    </div>
+</body>
+
+</html>

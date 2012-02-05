@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="ja" xml:lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<link rel="stylesheet" href="/site_media/css/import.css" type="text/css" />
+<link rel="stylesheet" href="/site_media/css/dialog.css?20090401" type="text/css" />
+<script type="text/javascript" src="/site_media/javascript/jquery-1.2.6.min.js"></script>
+<script type="text/javascript" src="/site_media/javascript/jquery-ui-personalized-1.5.3.min.js"></script>
+<script type="text/javascript" src="/site_media/javascript/jquery.form.js"></script>
+<script type="text/javascript" src="/site_media/javascript/common.js?20090401"></script>
+{% block extrastyle %}{% endblock %}
+{% block extrahead %}{% endblock %}
+<title>{% block title %}{{ current_site.name }}{% endblock %}</title>
+</head>
+
+<body>
+
+<div id="container">
+<div id="container_inner">
+
+<div id="pagebody">
+<div id="pagebody_inner">
+
+<div id="header">
+{% block header %}
+
+<h1><a href="/"><img src="/site_media/images/common/logo.png" /></a></h1>
+
+<form id="headsearch" action="{% url gp-search-noarg %}" class="form01" method="GET">
+<input id="search_ipt01" type="text" value="お題、レシピを検索" name="query" class="ipt01" />
+<a href="#" id="headsubmit"><img src="/site_media/images/common/btn_search.jpg" /></a>
+</form>
+
+<ul class="ul01">
+<li class="li01"><a href="/">トップ</a></li>
+<li class="li02"><a href="{% url recipes-contests-current %}">お題を見る</a></li>
+<li class="li03"><a href="{% url active-users %}">メンバーを見る</a></li>
+<!-- /ul01 --></ul>
+
+<ul class="ul02">
+{% if user.is_authenticated %}
+    <li><a href="{% url recipes-users-home %}">ホーム</a></li>
+    <li><a href="{% url recipes-users-recipes user_id=user.id %}">マイレシピ</a></li>
+    <li><a href="{% url recipes-users-favorite-recipes-show user_id=user.id %}">フェイバリット</a></li>
+    <li><a href="{% url recipes-users-edit-profile %}">設定変更</a></li>
+    <li><a href="{% url django.contrib.auth.views.logout %}">ログアウト</a></li>
+    <li><a href="{% url documents-show label="help" %}">ヘルプ</a></li>
+{% else %}
+    <li><a href="{% url django.contrib.auth.views.login %}">ログイン</a></li>
+    <li><a href="{% url recipes-users-new %}">メンバー登録</a></li>
+    <li><a href="{% url documents-show label="help" %}">ヘルプ</a></li>
+{% endif %}
+<!-- /ul02 --></ul>
+
+{% endblock %}
+<!-- /header --></div>
+
+<div id="wrapper">
+<div id="wrapper_inner">
+
+<div id="alpha">
+<div id="alpha_inner">
+{% block content %}
+
+{% endblock %}
+<!-- /alpha_inner --></div>
+<!-- /alpha --></div>
+
+<div id="beta">
+<div id="beta_inner">
+{% block side %}
+{% include "recipes/side1.html" %}
+{% endblock %}
+<!-- /beta_inner --></div>
+<!-- /beta --></div>
+
+<!-- /wrapper_inner --></div>
+<!-- /wrapper --></div>
+
+<div id="footer">
+<div id="footer_inner">
+{% block footer %}
+
+<ul class="ul01">
+<li class="li00"><a href="{% url documents-show label="tos" %}">利用規約</a></li>
+<li><a href="{% url documents-show label="privacy" %}">個人情報保護方針</a></li>
+<li><a href="{% url documents-show label="company" %}">会社情報</a></li>
+<li><a href="{% url documents-show label="help" %}">ヘルプ</a></li>
+<!-- /ul01 --></ul>
+
+<address>
+{% autoescape off %}{{ settings.COPYRIGHT }}{% endautoescape %}
+</address>
+
+{% endblock %}
+<!-- /footer_inner --></div>
+<!-- /footer --></div>
+
+<!-- /pagebody_inner --></div>
+<!-- /pagebody --></div>
+
+<!-- /container_inner --></div>
+<!-- /container --></div>
+
+<div id="mbox" style="display:none">
+<p id="mtext">
+{% block message %}
+    {% for message in messages %}
+        {{ message }}<br />
+    {% endfor %}
+{% endblock %}
+</p>
+</div>
+
+<div id="confirmForm" class="flora" style="display:none">
+<p id="confirmText" class="p02"></p>
+</div>
+
+{% if user.is_authenticated %}
+    {% include "feedback/ajax_form.html" %}
+{% endif %}
+
+<input id="usertoken" type="hidden" value="{{ csrf_token }}" />
+
+{% include "bodyscript.html" %}
+</body>
+</html>

@@ -1,0 +1,1 @@
+create index search_entity_content_type_id_object_id on search_entity(content_type_id, object_id);

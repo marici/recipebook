@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% load textja %}
+
+{% block title %}
+    {{ contest.name }} の募集 - {{ current_site.name }}
+{% endblock %}
+
+{% block extrahead %}
+    <script type="text/javascript" src="/site_media/javascript/recipe.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="div_alpha02">
+    <div class="div_alpha02_inner">
+    
+    <h2>{{ contest.name }} の募集</h2>
+    
+    <p class="p01">
+    {% if contest.is_finished %}
+        終了しています。
+    {% else %}
+        {% if contest.is_closed %}
+            レシピの募集は終了しています。
+        {% else %}
+            レシピを募集しています!
+        {% endif %}
+    {% endif %}
+    </p>
+    {% if not contest.is_closed %}
+        <p class="p02">
+        <a href="{% url recipes-register-to-contest contest_id=contest.id %}">応募レシピを書く</a>
+        {% if settings.USE_MAIL_POST and user.is_authenticated %}
+            <span><a id="sendMailButton" href="{% url recipes-contests-mail-template contest_id=contest.id %}">携帯からレシピを書く</a></span>
+        {% endif %}
+        </p>
+    {% endif %}
+    
+    <!-- /div_alpha02_inner --></div>
+    <!-- /div_alpha02 --></div>
+    
+    <div class="div_alpha01">
+    <h2><img src="/site_media/images/common/ttl_alpha01.jpg" alt="募集要項" /></h2>
+    <div class="div_alpha01_inner">
+    
+    <p class="p01">{{ contest.description|linebreaksbr }}</p>
+    <p class="p02">{% if contest.image %}<img width="129" src="{{ contest.image|thumbnail:"129x129" }}" alt="{{ contest.name }}" />{% endif %}</p>
+    <dl class="dl01">
+    <dd class="dd01"><span class="spn01">募集期間</span><span class="spn02">{{ contest.published_at|date:"n月j日 G:i" }} から{{ contest.closed_at|date:"n月j日 G:i" }} まで</span></dd>
+    <dd class="dd01"><span class="spn01">{% if contest.is_finished %}結果発表日{% else %}結果発表予定日{% endif %}</span><span class="spn02">{{ contest.finished_at|date:"n月j日 G:i" }}</span></dd>
+    </dl>
+    
+    </div>
+    </div>
+
+    {% if contest.is_closed %}
+        <div class="div_alpha01">
+        <h2><img src="/site_media/images/common/ttl_alpha02.jpg" alt="受賞レシピ" /></h2>
+        <div class="div_alpha01_inner">
+    
+        <div class="div01">
+        {% if contest.is_really_finished %}
+            <p class="p01">{{ contest.comment|linebreaksbr }}</p>
+            {% for recipe in top_award_recipes %}
+                <dl class="dl02">
+                <dt><a href="{% url recipes-show recipe_id=recipe.id %}">{{ recipe.name }}</a></dt>
+                <dd class="dd01"><a href="{% url recipes-show recipe_id=recipe.id %}">{% if recipe.photo %}<img src="{{ recipe.photo|thumbnail:"201x151" }}" alt="{{ recipe.name }}" />{% endif %}</a></dd>
+                <dd class="dd02">by <a href="{% url recipes-users-show user_id=recipe.user_id %}">{{ recipe.user.first_name }}</a> さん</dd>
+                <dd class="dd03">{{ recipe.introduction|abbr:15 }}</dd>
+                <!-- /dl02 --></dl>
+            {% endfor %}
+            </div>
+            
+            <div class="div02">
+            {% for recipe in award_recipes %}
+                <dl class="dl03">
+                <dt><a href="{% url recipes-show recipe_id=recipe.id %}">{{ recipe.name }}</a></dt>
+                <dd class="dd01"><a href="{% url recipes-show recipe_id=recipe.id %}"><img src="{{ recipe.photo|thumbnail:"99x99" }}" alt="{{ recipe.name }}" /></a></dd>
+                <dd class="dd03">by <a href="{% url recipes-users-show user_id=recipe.user_id %}">{{ recipe.user.first_name }}</a> さん</dd>
+                <dd class="dd04">{{ recipe.introduction|abbr:80 }}</dd>
+                <!-- /dl03 --></dl>
+            {% endfor %}
+        {% else %}
+            <p class="p01">ただいま審査中です。審査結果をお待ちください！</p>
+        {% endif %}
+            
+        {% if contest.reviewing_photo1 %}
+            <p class="p01" style="clear:both">審査風景をご紹介します。</p>
+            <center>
+            <ul class="ul02">
+            {% if contest.reviewing_photo1 %}
+                <li class="li05"><img src="{{ contest.reviewing_photo1|thumbnail:"150x150" }}" title="審査風景" /></li>
+            {% endif %}
+            {% if contest.reviewing_photo2 %}
+                <li class="li05"><img src="{{ contest.reviewing_photo2|thumbnail:"150x150" }}" title="審査風景" /></li>
+            {% endif %}
+            {% if contest.reviewing_photo3 %}
+                <li class="li05"><img src="{{ contest.reviewing_photo3|thumbnail:"150x150" }}" title="審査風景" /></li>
+            {% endif %}
+            {% if contest.reviewing_photo4 %}
+                <li class="li05"><img src="{{ contest.reviewing_photo4|thumbnail:"150x150" }}" title="審査風景" /></li>
+            {% endif %}
+            {% if contest.reviewing_photo5 %}
+                <li class="li05"><img src="{{ contest.reviewing_photo5|thumbnail:"150x150" }}" title="審査風景" /></li>
+            {% endif %}
+            </ul>
+            </center>
+        {% endif %}
+
+        </div>
+        </div>
+        </div>
+    {% endif %}
+
+    {% with contest.producer as producer %}
+    	{% if producer %}
+            <div class="div_alpha01">
+            <h2><img src="/site_media/images/common/ttl_alpha03.jpg" alt="生産者PR" /></h2>
+            <div class="div_alpha01_inner">
+            
+            <h3 class="h3_arrow">{{ producer.name }}</h3>
+            <dl class="dl04">
+            <dt>{% if producer.photo %}<img src="{{ producer.photo.url|thumbnail:"70x70" }}" />{% endif %}</dt>
+            <dd class="dd01">{{ producer.introduction|linebreaksbr }}</dd>
+            <dd class="dd02">{% ifnotequal producer.url "" %}<a target="_blank" href="{{ producer.url }}">Webサイトへ</a>{% endifnotequal %}</dd>
+            <!-- /dl04 --></dl>
+            
+            </div>
+            </div>
+	    {% endif %}
+    {% endwith %}
+
+    <div class="div_alpha03">
+    <h2><img src="/site_media/images/common/ttl_alpha04.jpg" alt="応募レシピ一覧" /><span class="spn01"><a href="{% url recipes-contests-recipes contest_id=contest.id %}"><img src="/site_media/images/common/btn_readall.jpg" alt="全て見る" class="swap" /></a></span></h2>
+    <div class="div01">
+
+    {% for recipe in contest.get_new_recipes %}
+        <dl class="dl01">
+        <dt><a href="{% url recipes-show recipe_id=recipe.id %}">{{ recipe.name|abbr:12 }}</a></dt>
+        <dd class="dd01">{% if recipe.photo %}<a href="{% url recipes-show recipe_id=recipe.id %}">
+            <img src="{{ recipe.photo|thumbnail:"98x98" }}" alt="{{ recipe.name }}" /></a>{% endif %}</dd>
+        <dd class="dd02">by <a href="{% url recipes-users-show user_id=recipe.user_id %}">{{ recipe.user.first_name }}</a> さん</dd>
+        <dd class="dd03">
+        {% if recipe.is_awarded and recipe.contest.is_really_finished %}
+            <img src="/site_media/images/common/icon_awardedstatus.jpg" />
+        {% endif %}
+        {{ recipe.introduction|abbr:80 }}</dd>
+        </dl>
+    {% endfor %}
+    
+    </div>
+    </div>
+    
+    {% if contests %}
+        <div class="div_alpha01">
+        <h2><img src="/site_media/images/common/ttl_alpha05.jpg" alt="他のお題" /></h2>
+        <div class="div_alpha01_inner">
+        <p class="p01">他にもこんなお題で募集しています。</p>
+    
+        <ul class="ul01">
+        {% for other_contest in contests %}
+            {% ifnotequal contest other_contest %}
+                <li>
+                <a href="{% url recipes-contests-show contest_id=other_contest.id %}">
+                {{ other_contest.name }}
+                </a>
+                あと {{ other_contest.left_days }}日
+                </li>
+            {% endifnotequal %}
+        {% endfor %}
+        </ul>
+
+        </div>
+        </div>
+    {% endif %}
+    
+    <div id="mailForm" class="flora" style="display:none">
+    <p class="p01">携帯のメールアドレスを入力し、送るボタンをクリックしてください。<br />
+    投稿用のテンプレートが送信されます。</p>
+    <table class="tbl01">
+        <tr><th>メールアドレス:</th>
+        <td><input id="id_alter_email" name="alter_email" type="text" value="{{ user.get_profile.alter_email }}" /></td></tr>
+    </table>
+    </div>
+    
+{% endblock %}

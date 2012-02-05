@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="div_alpha14">
+    <h2 class="h2_alpha02">入力内容の確認</h2>
+    
+    <h3>入力内容</h3>
+    <div class="div_alpha14_inner">
+    <table class="tbl03">
+        {% for field in form %}
+            <tr>
+            <th>{{ field.label }}:</th>
+            <td>
+                {% if field.data %}
+                    {% if field.data.url %}
+                        {{ field.data.url }}
+                    {% else %}
+                        {{ field.data }}
+                    {% endif %}
+                {% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+    <form action="" method="POST">
+        {% for field in form %}
+            {{ field.as_hidden }}
+        {% endfor %}
+        <input type="hidden" name="{{ stage_field }}" value="2" />
+        <input type="hidden" name="{{ hash_field }}" value="{{ hash_value }}" />
+        <p><input type="submit" value="決定" /></p>
+    </form>
+    </div>
+    </div>
+    
+    <div class="div_alpha14">
+    <h3>入力し直す</h3>
+    <div class="div_alpha14_inner">
+    <form action="" method="POST">
+        <table class="tbl03">
+            {{ form }}
+        </table>
+        <input type="hidden" name="{{ stage_field }}" value="1" />
+        <input type="submit" value="確認" />
+    </form>
+    </div>
+    </div>
+    
+{% endblock %}

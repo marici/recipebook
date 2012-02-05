@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% load textja %}
+
+{% block extrahead %}
+    <script type="text/javascript" src="/site_media/javascript/recipe.js"></script>
+{% endblock %}
+
+{% block title %}{{ homeuser.first_name }} さん - {{ current_site.name }}{% endblock %}
+
+{% block content %}
+    <ul class="ul_navi_func">
+    {% ifequal homeuser user %}
+        <li class="li02"><a href="{% url recipes-users-edit-profile %}">プロフィールを編集</a></li>
+    {% else %}
+        {% if user.is_authenticated %}
+            <li id="addFavoriteButton" class="li02" style="{% if is_favorite %}display:none"{% endif %}">
+            <a class="ajaxLink cb_doneAddFavoriteButton" 
+                href="{% url recipes-users-favorite-add user_id=homeuser.id %}">フェイバリット</a>
+            </li>
+            <li id="removeFavoriteButton" class="li02" style="{% if not is_favorite %}display:none{% endif %}">
+            <a class="ajaxLink cb_doneRemoveFavoriteButton" 
+                href="{% url recipes-users-favorite-remove user_id=homeuser.id %}">フェイバリットから外す</a>
+            </li>
+        {% endif %}
+    {% endifequal %}
+    </ul>
+    
+    <div class="div_alpha06">
+    <h2 class="h2_01"><img src="/site_media/images/user/ttl01.jpg" alt="プロフィール" /></h2>
+    <div class="div_alpha06_inner">
+    
+    <dl class="dl01">
+    <dt><a href="/">
+    {% if profile.icon %}
+        <img src="{{ profile.icon.url }}" />
+    {% endif %}
+    </a></dt>
+    <dd class="dd01">{{ homeuser.first_name }} さん</dd>
+    <dd class="dd02">自己紹介: {{ profile.profile_text|default_if_none:""|linebreaksbr }}</dd>
+    {% if profile.blog_url %}
+        <dd class="dd02">ブログ: <a target="_blank" href="{{ profile.blog_url }}">{{ profile.blog_url }}</a></dd>
+    {% endif %}
+    </dl>
+    
+    </div>
+    </div>
+
+    <div class="div_alpha03">
+    <h2><img src="/site_media/images/user/ttl02.jpg" alt="人気のレシピ" /><span class="spn01"><a href="{% url recipes-users-recipes user_id=homeuser.id %}"><img src="/site_media/images/common/btn_readall.jpg" alt="全て見る" class="swap" /></a></span></h2>
+    <div class="div01">
+    {% for recipe in popular_recipes %}
+        <dl class="dl01">
+        <dt><a href="{% url recipes-show recipe_id=recipe.id %}">{{ recipe.name|abbr:12 }}</a></dt>
+        <dd class="dd01">{% if recipe.photo %}<a href="{% url recipes-show recipe_id=recipe.id %}">
+            <img width=98" src="{{ recipe.photo.url }}" alt="{{ recipe.name }}" /></a>{% endif %}</dd>
+        <dd class="dd02">
+        {% if recipe.is_awarded and recipe.contest.is_really_finished %}
+            <img src="/site_media/images/common/icon_awardedstatus.jpg" />
+        {% endif %}
+        {{ recipe.introduction|abbr:80 }}</dd>
+        </dl>
+    {% endfor %}
+    </div>
+    </div>
+
+    <div class="div_alpha03">
+    <h2><img src="/site_media/images/user/ttl03.jpg" alt="最新のレシピ" /><span class="spn01"><a href="{% url recipes-users-recipes user_id=homeuser.id %}"><img src="/site_media/images/common/btn_readall.jpg" alt="全て見る" class="swap" /></a></span></h2>
+    <div class="div01">
+    {% for recipe in recent_recipes %}
+        <dl class="dl01">
+        <dt><a href="{% url recipes-show recipe_id=recipe.id %}">{{ recipe.name|abbr:12 }}</a></dt>
+        <dd class="dd01">{% if recipe.photo %}<a href="{% url recipes-show recipe_id=recipe.id %}">
+            <img width=98" src="{{ recipe.photo|thumbnail:"104x104" }}" alt="{{ recipe.name }}" /></a>{% endif %}</dd>
+        <dd class="dd02">
+        {% if recipe.is_awarded and recipe.contest.is_really_finished %}
+            <img src="/site_media/images/common/icon_awardedstatus.jpg" />
+        {% endif %}
+        {{ recipe.introduction|abbr:80 }}</dd>
+        </dl>
+    {% endfor %}
+    </div>
+    </div>
+
+    <div class="div_alpha03">
+    <h2><img src="/site_media/images/user/ttl06.jpg" alt="フェイバリットレシピ" /><span class="spn01"><a href="{% url recipes-users-favorite-recipes-show user_id=homeuser.id %}"><img src="/site_media/images/common/btn_readall.jpg" alt="全て見る" class="swap" /></a></span></h2>
+    <div class="div01">
+    {% for recipe in favorite_recipes %}
+        <dl class="dl01">
+        <dt><a href="{% url recipes-show recipe_id=recipe.id %}">{{ recipe.name|abbr:12 }}</a></dt>
+        <dd class="dd01">{% if recipe.photo %}<a href="{% url recipes-show recipe_id=recipe.id %}">
+            <img width=98" src="{{ recipe.photo.url }}" alt="{{ recipe.name }}" /></a>{% endif %}</dd>
+        <dd class="dd02">
+        {% if recipe.is_awarded and recipe.contest.is_really_finished %}
+            <img src="/site_media/images/common/icon_awardedstatus.jpg" />
+        {% endif %}
+        {{ recipe.introduction|abbr:80 }}</dd>
+        </dl>
+    {% endfor %}
+    </div>
+    </div>
+
+    <div class="div_alpha07">
+    <h2 class="h2_01"><img src="/site_media/images/user/ttl04.jpg" alt="フェイバリットメンバー" />
+        <span class="spn01"><a href="{% url recipes-users-favorite-users-show user_id=homeuser.id %}"><img src="/site_media/images/common/btn_readall.jpg" alt="全て見る" class="swap" /></a></span></h2>
+    <div class="div_alpha07_inner">
+    {% for up in favorite_user_profiles %}
+        <dl class="dl01">
+        <dt><a href="{% url recipes-users-show user_id=up.user.id %}">
+        {% if up.profile.icon %}
+            <img height="60" src="{{ up.profile.icon.url }}" alt="{{ up.user.first_name }}" title="{{ up.user.first_name }}" />
+        {% else %}
+            <img src="/site_media/images/dummy/img_dummy_alpha06.jpg" alt="{{ up.user.first_name }}" title="{{ up.user.fistname }}" />
+        {% endif %}
+        </a></dt>
+        <dd class="dd01"><a href="{% url recipes-users-show user_id=up.user.id %}">{{ up.user.first_name }}</a> さん</dd>
+        </dl>
+    {% endfor %}
+    </div>
+    </div>
+{% endblock %}

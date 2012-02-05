@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load sitenews %}
+{% load thumbnail %}
+{% load textja %}
+
+{% block title %}ホーム - {{ current_site.name }}{% endblock %}
+
+{% block extrahead %}
+    <script type="text/javascript" src="/site_media/javascript/recipe.js"></script>
+    <script type="text/javascript" src="/site_media/javascript/comments.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="div_alpha02">
+    <div class="div_alpha02_inner">
+    <h2>{{ user.first_name }} さんのホーム</h2>
+    <p class="p02">あと{{ profile.vote_point }}回投票できます。</p>
+    </div>
+    </div>
+    
+    <ul class="ul_navi_func">
+    <li class="li01"><a href="{% url recipes-register %}">レシピを書く</a></li>
+    {% if settings.USE_MAIL_POST %}
+        <li class="li01"><a id="sendMailButton" href="{% url recipes-mail-template %}">携帯からレシピを書く</a></li>
+    {% endif %}
+    <li class="li02"><a href="{% url recipes-users-show user_id=user.id %}">プロフィールを確認</a></li>
+    </ul>
+    
+    <div class="div_alpha08">
+    <h2 class="h2_alpha02">{{ current_site.name }}からのお知らせ<span class="spn01"><a href="{% url sitenews-showlist %}"><img src="/site_media/images/common/btn_readall.jpg" alt="全て見る" class="swap" /></a></span></h2>
+    <div class="div_alpha08_inner">
+    <ul class="ul01">
+    {% get_sitenews_list %}
+    {% if not sitenews_list %}
+        <li>お知らせはありません。</li>
+    {% else %}
+        {% for sitenews in sitenews_list %}
+            <li>
+            {{ sitenews.published_at|date:"n月j日" }} 
+            {% if sitenews.has_detail %}
+                <a href="{% url sitenews-show news_id=sitenews.id %}">
+                {{ sitenews.title }}
+                </a>
+            {% else %}
+                {{ sitenews.title }}
+            {% endif %}
+            </li>
+        {% endfor %}
+    {% endif %}
+    </ul>
+    </div>
+    </div>
+    
+    <div class="div_alpha08">
+    <h2 class="h2_01"><img src="/site_media/images/user/ttl05.jpg" alt="フェイバリットメンバーのニュース" /></h2>
+    <div class="div_alpha08_inner">
+    <ul class="ul01">
+    {% if not favorite_user_actions %}
+        <li>まだニュースがありません。</li>
+    {% endif %}
+    {% for object in favorite_user_actions %}
+        <li>{{ object.news_date|date:"n月j日" }} <a href="{{ object.get_absolute_url }}">{{ object.news_text }}</a></li>
+    {% endfor %}
+    </ul>
+    </div>
+    </div>
+
+    <div class="div_alpha08">
+    <h2 class="h2_alpha02">最近もらったコメント
+        <span class="spn01"><a href="{% url recipes-users-home-comments %}"><img src="/site_media/images/common/btn_readall.jpg" alt="全て見る" class="swap" /></a></span></h2>
+    <div class="div_alpha08_inner">
+    <ul class="ul01">
+    {% if not comments %}
+        <li>まだコメントがありません。</li>
+    {% endif %}
+    {% for comment in comments %}
+        <li class="comment">
+        <a class="ajaxLink pre_confirmDeleteComment2 cb_doneDeleteComment2" href="{% url recipes-comment-delete comment_id=comment.id %}"><img src="/site_media/images/common/btn_delete.gif" alt="削除する" title="削除する" /></a>
+        {% if not comment.is_moderated %}
+            <a class="ajaxLink cb_doneApproveComment2" href="{% url recipes-comment-approve comment_id=comment.id %}"><img src="/site_media/images/common/btn_approve.gif" alt="承認する" title="承認する" /></a>
+        {% endif %}
+        「<a href="{% url recipes-show recipe_id=comment.recipe_id %}">{{ comment.recipe.name }}</a>」 に
+        <a href="{% url recipes-users-show user_id=comment.user_id %}">{{ comment.user.first_name }}</a> さんのコメント
+        「{{ comment.text|abbr:30 }}」
+        </li>
+    {% endfor %}
+    </ul>
+    </div>
+    </div>
+    
+    <div class="div_alpha03">
+    <h2 class="h2_alpha02">最近書いたレシピ<span class="spn01"><a href="{% url recipes-users-recipes user_id=user.id %}"><img src="/site_media/images/common/btn_readall.jpg" alt="全て見る" class="swap" /></a></span></h2>
+    <div class="div01">
+    {% for recipe in recent_recipes %}
+        <dl class="dl01">
+        <dt><a href="{% url recipes-show recipe_id=recipe.id %}">{{ recipe.name|abbr:12 }}</a></dt>
+        <dd class="dd01">{% if recipe.photo %}<a href="{% url recipes-show recipe_id=recipe.id %}">
+            <img width=98" src="{{ recipe.photo|thumbnail:"104x104" }}" alt="{{ recipe.name }}" /></a>{% endif %}</dd>
+        <dd class="dd02">
+        {% if recipe.is_awarded and recipe.contest.is_really_finished %}
+            <img src="/site_media/images/common/icon_awardedstatus.jpg" />
+        {% endif %}
+        {{ recipe.introduction|abbr:80 }}</dd>
+        </dl>
+    {% endfor %}
+    </div>
+    </div>
+
+    <div id="confirmForm" class="flora" style="display:none">
+    <p id="confirmText" class="p02"></p>
+    </div>
+
+    <div id="mailForm" class="flora" style="display:none">
+    <p class="p01">携帯のメールアドレスを入力し、送るボタンをクリックしてください。<br />
+    投稿用のテンプレートが送信されます。</p>
+    <table class="tbl01">
+        <tr><th>メールアドレス:</th>
+        <td><input id="id_alter_email" name="alter_email" type="text" value="{{ user.get_profile.alter_email }}" /></td></tr>
+    </table>
+    </div>
+    
+{% endblock %}

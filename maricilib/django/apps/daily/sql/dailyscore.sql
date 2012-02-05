@@ -1,0 +1,2 @@
+create index daily_dailyscore_content_type_id_object_id_scored_at on daily_dailyscore(content_type_id, object_id, scored_at);
+create index daily_dailyscore_content_type_id_scored_at_score on daily_dailyscore(content_type_id, scored_at, score);

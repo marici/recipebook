@@ -1,0 +1,48 @@
+{% extends "documents/base.html" %}
+
+{% block title %}
+    {% if parent %}
+        {{ parent.title }} - 
+    {% endif %}
+    {{ document.title }}
+{% endblock %}
+
+{% block side %}
+    {% include "documents/side_navi.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="document-main">
+    
+        <div class="document-parent-link">
+            <a href="{% url documents-index %}">&laquo; インデックス</a>
+            {% if parent %}
+                <a href="{% url documents-show label=parent.label %}">&laquo; {{ parent.title }}</a>
+            {% endif %}
+        </div>
+        
+        <div class="document-content">
+            <h2>{{ document.title }}</h2>
+            
+            {% if document.image %}
+                <div class="document-image">
+                    <img src="{{ document.image.url }}" alt="{{ document.image_description }}" />
+                    <p>{{ document.image_description }}</p>
+                </div>
+            {% endif %}
+            
+            <div id="document-body">
+                {% if document.syntax %}
+                    {{ document.markuped_body|safe }}
+                {% else %}
+                    {{ document.body|linebreaks }}
+                {% endif %}
+            </div>
+        </div>
+        
+        {% with children as documents %}
+            {% include "documents/index_list.html" %}
+        {% endwith %}
+        
+    </div>
+{% endblock %}

@@ -1,0 +1,16 @@
+<div id="div_feedback_button">
+    <a href="#"><image id="img_feedback" class="swap" src="{{ MEDIA_URL }}images/feedback/feedback.png" /></a>
+</div>
+
+<div id="div_feedback" class="{% block div_class %}flora{% endblock %}" 
+     style="display:none">
+    <p id="p_feedback" class="{% block p_class %}p01{% endblock %}">
+        {% block desription %}ご要望やお困りの点など、お気軽にお寄せください。{% endblock %}
+    </p>
+    <form id="form_feedback" action="{% url feedback-submit %}" method="POST">
+        <table id="tbl_feedback" class="{% block tbl_class %}tbl01{% endblock %}">
+            {{ feedback_form }}
+            <input id="id_feedback-path" type="hidden" name="path" value="{{ feedback_path }}" />
+        </table>
+    </form>
+</div>

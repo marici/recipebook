@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}ログイン - {{ current_site.name }}{% endblock %}
+
+{% block extrahead %}
+    <script type="text/javascript"><!--
+        $(document).ready(function (){
+            $("#id_email").focus();
+        });
+    // --></script>
+{% endblock %}
+
+{% block content %}
+    <div class="div_alpha14">
+    <h2 class="h2_alpha02">ログイン</h2>
+    <div class="div_alpha14_inner">
+    
+	{% if form.errors %}
+        <p class="p01">ログインできませんでした。</p>
+	    {{ form.non_field_errors }}
+	{% endif %}
+    
+	<form method="POST" action=".">
+	    <table class="tbl01">
+	        <tr>
+	        	<th><label for="id_email">メールアドレス:</label></td>
+	            <td>{{ form.email }}</td>
+	        </tr>
+	        <tr>
+	        	<th><label for="id_password">パスワード:</label></td>
+	            <td>{{ form.password }}</td>
+	        </tr>
+	    </table>
+	    <input type="submit" value="ログイン" />
+	    <input type="hidden" name="next" value="{{ next }}" />
+	</form>
+    
+    <p class="p02"><a href="/accounts/password_reset/">パスワードを忘れた場合</a></p>
+       
+    </div>
+    </div>
+{% endblock %}

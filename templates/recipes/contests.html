@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load cache %}
+
+{% block title %}
+	{{ title }} - {{ current_site.name }}
+{% endblock %}
+
+{% block content %}
+{% cache 300 recipes_contests_content title %}
+    {% if links %}
+        <p class="p_person">
+        {% for link in links %}
+            &laquo; <a href="{{ link.url }}">{{ link.name }}</a>
+        {% endfor %}
+        </p>
+    {% endif %}
+    
+    <div class="div_alpha14">
+    <h2 class="h2_alpha02">{{ title }}</h2>
+    <div class="div_alpha14_inner">
+    
+    {% for contest in page_obj.object_list %}
+        <dl class="dl04">
+        <dt><a href="{% url recipes-contests-show contest_id=contest.id %}">{{ contest.name }}</a></dt>
+        <dd>{{ contest.description|linebreaksbr }}</dd>
+        <dd>
+        {% if contest.is_finished %}
+            終了しています。
+        {% else %}
+            {% if contest.is_closed %}
+                レシピの募集は終了しています。
+            {% endif %}
+        {% endif %}
+        </dd>
+        <!-- /dl04 --></dl>
+    
+        {% include "recipes/contest_data_table.html" %}
+    {% endfor %}
+    </div>
+    </div>
+    
+    {% include "paginator.html" %}
+
+{% endcache %}
+{% endblock %}
