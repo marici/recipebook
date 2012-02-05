@@ -255,6 +255,11 @@ class Contest(models.Model):
         return list(self.recipe_set.filter(is_awarded=True))
     awarded_recipes = property(get_awarded_recipes)
         
+    def get_awarded_recipe(self):
+        recipes = self.get_awarded_recipes()
+        return recipes[0] if recipes else None
+    awarded_recipe = property(get_awarded_recipe)
+        
     def __need_add_index__(self):
         now = datetime.now()
         return self.published_at <= now

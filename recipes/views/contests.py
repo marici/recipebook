@@ -94,7 +94,7 @@ def show_contest(request, contest_id=None):
     d = {"contest":contest,
          "contests":contests}
     if contest.is_really_finished():
-        award_recipes = contest.get_sale_and_award_recipes(contest)
+        award_recipes = contest.get_awarded_recipes()
         d["top_award_recipes"] = award_recipes[:2]
         d["award_recipes"] = award_recipes[2:]
     return render_to_response("recipes/contest.html",
