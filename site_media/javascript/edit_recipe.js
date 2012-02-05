@@ -90,6 +90,7 @@
         var input = $('<textarea />').addClass("directionInput")
             .attr("cols", "50").attr("rows", 2)
             .text(direction.fields.text).hide();
+        input.css('display', 'none');
         elm.append(input);
         
         $.each(editLink, wrapEditDirectionLink);
