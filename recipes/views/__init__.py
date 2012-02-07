@@ -346,6 +346,33 @@ def show_voting_users(request, recipe_id):
                               d, RequestContext(request))
 
 @postmethod
+def copy_recipe(request, recipe_id=None):
+    """
+    指定されたIDのレシピをコピーして、ログインユーザのレシピを作成します。
+    作成者以外の場合、下書きをコピーすることはできません。
+
+    @param recipe_id: レシピID
+    @return: 302レスポンス (ログインページへ。ログインしていない場合)
+    @return: 403レスポンス (指定されたレシピが下書きであり、作成者がログインユーザではない場合)
+    @return: 404レスポンス (指定されたIDのレシピが存在しない場合)
+    @return: 200レスポンス (成功。結果とレシピIDをJSONで出力)
+    """
+    failure_json = simplejson.dumps({"status": "failure"})
+    if request.user is None or not request.user.is_active:
+        return HttpResponse(failure_json, "application/json", 403)
+    try:
+        recipe = Recipe.objects.get(pk=recipe_id)
+    except Recipe.DoesNotExist:
+        return HttpResponse(failure_json, "application/json", 404)
+    if not recipe.user.is_active:
+        return HttpResponse(failure_json, "application/json", 404)
+    if recipe.is_draft and recipe.user != request.user:
+        return HttpResponse(failure_json, "application/json", 403)
+    new_recipe = recipe.copy(request.user)
+    json = simplejson.dumps({"status": "success", "recipe_id": new_recipe.pk})
+    return HttpResponse(json, "application/json")
+
+@postmethod
 @login_required
 def register_direction(request, recipe_id=None):
     """
