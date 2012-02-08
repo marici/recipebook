@@ -123,6 +123,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'django.contrib.formtools',
     'django.contrib.humanize',
+    'django.contrib.localflavor',
     'recipebook.maricilib.django.apps.sitenews',
     'recipebook.maricilib.django.apps.documents',
     'recipebook.maricilib.django.apps.search',
