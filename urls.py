@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     url(r'^feedback/', include('recipebook.maricilib.django.apps.feedback.urls')),
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/(.*)', admin.site.root),
+    url(r'^admin/', include(admin.site.urls)),
 )
 
 if settings.DEBUG:

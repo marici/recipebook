@@ -102,7 +102,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("email", "firstname")
+        fields = ("email", "first_name")
         
     email = forms.EmailField(label=u"メールアドレス", 
                              help_text=u"メールアドレスは公開されません。")

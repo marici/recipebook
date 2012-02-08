@@ -438,7 +438,7 @@ class Recipe(models.Model):
                                    editable=False, null=True, blank=True)
     tips = models.TextField(u"作り方のヒント、コツ", 
             null=True, blank=True, default="")
-    is_draft = models.BooleanField(u"下書き",
+    is_draft = models.NullBooleanField(u"下書き",
             null=True, blank=True, default=True)
     num_moderated_comments = models.IntegerField(u"承認済みコメント数", 
                                                  editable=False, default=0)
