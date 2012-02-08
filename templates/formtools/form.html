@@ -8,7 +8,7 @@
         <h1>作成</h1>
     {% endif %}
     
-    <form action="" method="POST">
+    <form action="" method="POST">{% csrf_token %}
         <table>
             {{ form }}
         </table>

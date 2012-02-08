@@ -23,7 +23,7 @@
         {% endfor %}
     </table>
     
-    <form action="" method="POST">
+    <form action="" method="POST">{% csrf_token %}
         {% for field in form %}
             {{ field.as_hidden }}
         {% endfor %}
@@ -37,7 +37,7 @@
     <div class="div_alpha14">
     <h3>入力し直す</h3>
     <div class="div_alpha14_inner">
-    <form action="" method="POST">
+    <form action="" method="POST">{% csrf_token %}
         <table class="tbl03">
             {{ form }}
         </table>

@@ -27,7 +27,7 @@
     <h3>基本情報</h3>
     <div class="div_alpha14_inner">
     
-	<form id="mainForm" method="POST" enctype="multipart/form-data" action="{% url recipes-edit recipe_id=recipe.id %}">
+	<form id="mainForm" method="POST" enctype="multipart/form-data" action="{% url recipes-edit recipe_id=recipe.id %}">{% csrf_token %}
 	    {% if recipe.photo %}
             <p class="p01"><img width="200" src="{{ recipe.photo|thumbnail:"200x500" }}" /></p>
 	    {% endif %}
@@ -96,6 +96,7 @@
         method="POST"
         enctype="multipart/form-data" 
         action="{% url recipes-direction-register recipe_id=recipe.id %}{% now "YmdHis" %}">
+        {% csrf_token %}
         <table class="tbl03">
     		{{ direction_form.as_table }}
         </table>

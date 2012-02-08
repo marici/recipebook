@@ -7,7 +7,7 @@
     <p id="p_feedback" class="{% block p_class %}p01{% endblock %}">
         {% block desription %}ご要望やお困りの点など、お気軽にお寄せください。{% endblock %}
     </p>
-    <form id="form_feedback" action="{% url feedback-submit %}" method="POST">
+    <form id="form_feedback" action="{% url feedback-submit %}" method="POST">{% csrf_token %}
         <table id="tbl_feedback" class="{% block tbl_class %}tbl01{% endblock %}">
             {{ feedback_form }}
             <input id="id_feedback-path" type="hidden" name="path" value="{{ feedback_path }}" />

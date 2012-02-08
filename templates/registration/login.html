@@ -20,7 +20,7 @@
 	    {{ form.non_field_errors }}
 	{% endif %}
     
-	<form method="POST" action=".">
+	<form method="POST" action=".">{% csrf_token %}
 	    <table class="tbl01">
 	        <tr>
 	        	<th><label for="id_email">メールアドレス:</label></td>

@@ -21,7 +21,7 @@
     <p class="p01">利用規約をご確認の上、情報を入力し、登録ボタンをクリックしてください。<br />
     確認メールが送信されます。<br />
     
-	<form method="POST" action=".">
+	<form method="POST" action=".">{% csrf_token %}
         <table class="tbl01">
     		{{ form.as_table }}
     	</table>

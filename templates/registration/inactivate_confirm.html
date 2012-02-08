@@ -10,7 +10,7 @@
 	<p class="p02">本当に退会してよろしいですか？<br />
     	よろしければ退会ボタンをクリックしてください。</p>
     
-    <form action="." method="POST">
+    <form action="." method="POST">{% csrf_token %}
     <input type="submit" value="退会" />
     </form>
     

@@ -19,7 +19,7 @@
     
 	<p class="p01">{{ text|linebreaksbr }}</p>
     
-	<form method="POST" action="{% if action %}{{ action }}{% else %}.{% endif %}">
+	<form method="POST" action="{% if action %}{{ action }}{% else %}.{% endif %}">{% csrf_token %}
         <table class="tbl01">
     		{{ form }}
     	</table>

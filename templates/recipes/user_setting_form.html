@@ -15,7 +15,7 @@
         <p class="p01"><img src="{{ profile.icon.url }}" /></p>
     {% endif %}
     
-    <form action="." enctype="multipart/form-data" method="POST">
+    <form action="." enctype="multipart/form-data" method="POST">{% csrf_token %}
         <table class="tbl03">
             <tr>
                 <th>ニックネーム:</th>
