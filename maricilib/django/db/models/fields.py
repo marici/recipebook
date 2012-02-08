@@ -45,9 +45,6 @@ class ResizedImageFieldFile(ImageFieldFile):
     @classmethod
     def resize_content(cls, content, max_width=None, max_height=None):
         try:
-            if not isinstance(content, InMemoryUploadedFile):
-                raise NotImplementedError("Only InMemoryUploadedFile is supported.")
-
             img = Image.open(content)
             width, height = img.size
             width = int(max_width or width)
@@ -61,9 +58,7 @@ class ResizedImageFieldFile(ImageFieldFile):
             img.save(sio, img.format, quality=95)
             sio.seek(0)
             content.close()
-            return InMemoryUploadedFile(sio, content.field_name, content.name,
-                                        content.content_type, content.size,
-                                        content.charset)
+            return InMemoryUploadedFile(sio, None, None, None, None, None)
         except Exception, e:
             log.warn("An error occured when resizing image. %s" % e)
             return content
