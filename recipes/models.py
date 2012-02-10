@@ -584,8 +584,10 @@ class Recipe(models.Model):
             'tips': self.tips,
             'parent': self,
             'ancestor': self.parent or self,
+            'retain_originality': True,
             'feeling': self.feeling,
             'user': user,
+            'contest': self.contest,
         }
         new_recipe = self.__class__(**data)
         new_recipe.save()
@@ -593,8 +595,8 @@ class Recipe(models.Model):
             Direction(
                 recipe=new_recipe,
                 number=direction.number,
-                text=text,
-                photo=directon.photo).save()
+                text=direction.text,
+                photo=direction.photo).save()
         return new_recipe
 
     def moderated_comments(self):
