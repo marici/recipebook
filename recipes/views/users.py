@@ -521,7 +521,8 @@ def login(request):
     """
     ログインフォームを表示します。
     """
-    d = {"form":forms.AuthenticationForm()}
+    d = {"form":forms.AuthenticationForm(),
+        "next":request.REQUEST.get("next", "")}
     return render_to_response("registration/login.html", d, RequestContext(request))
 
 @postmethod
