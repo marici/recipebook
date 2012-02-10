@@ -397,6 +397,7 @@ def register_direction(request, recipe_id=None):
         direction = form.save(commit=False)
         recipe.add_direction(direction)
         direction.save()
+        recipe.edit()
         d = {"status":"success",
              "message":"",
              "direction":{"pk":direction.id, 
@@ -432,6 +433,7 @@ def edit_direction(request, recipe_id=None, direction_id=None):
     text = request.POST.get("text")
     direction.text = text
     direction.save()
+    recipe.edit()
     json = serializers.serialize("json", [direction])
     return HttpResponse(json, mimetype="application/json")
 
@@ -457,6 +459,7 @@ def delete_direction(request, recipe_id=None, direction_id=None):
         return render_to_response_of_class(HttpResponseForbidden, "403.html")
     json = serializers.serialize("json", [direction])
     direction.delete();
+    recipe.edit()
     return HttpResponse(json, mimetype="application/json")
     
 @postmethod
@@ -484,6 +487,7 @@ def sort_directions(request, recipe_id=None):
         direction = direction_dict[int(direction_id)]
         direction.number = i
         direction.save()
+    recipe.edit()
     json = simplejson.dumps(direction_ids)
     return HttpResponse(json, mimetype="application/json")
 

@@ -530,6 +530,11 @@ class Recipe(models.Model):
     def add_direction(self, direction):
         direction.recipe = self
         direction.number = self.direction_set.count()
+
+    def edit(self, save=True):
+        if self.parent_id and self.retain_originality:
+            self.retain_originality = False
+            if save: self.save()
             
     def set_request_user(self, user):
         self.is_favorite = self._is_favorite(user)
