@@ -247,7 +247,7 @@ class RecipeForm(forms.ModelForm):
     def save(self, commit=True):
         if self.instance.parent_id:
             self.instance.retain_originality = False
-        super(RecipeForm, self).save(commit)
+        return super(RecipeForm, self).save(commit)
 
 class BackendRecipeForm(forms.ModelForm):
     class Meta:
@@ -274,7 +274,7 @@ class DirectionForm(forms.ModelForm):
         if recipe.parent_id:
             recipe.retain_originality = False
             recipe.save()
-        super(DirectionForm, self).save(commit)
+        return super(DirectionForm, self).save(commit)
 
 class CommentForm(forms.ModelForm):
     class Meta:
