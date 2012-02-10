@@ -244,6 +244,10 @@ class RecipeForm(forms.ModelForm):
         self.fields["introduction"].widget = _text_area(5, 60)
         self.fields["tips"].widget = _text_area(3, 60)
 
+    def save(self, commit=True):
+        if self.instance.parent_id:
+            self.instance.retain_originality = False
+        super(RecipeForm, self).save(commit)
 
 class BackendRecipeForm(forms.ModelForm):
     class Meta:
@@ -264,6 +268,13 @@ class DirectionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DirectionForm, self).__init__(*args, **kwargs) 
         self.fields["text"].widget = _text_area(3, 60)
+
+    def save(self, commit=True):
+        recipe = self.instance.recipe
+        if recipe.parent_id:
+            recipe.retain_originality = False
+            recipe.save()
+        super(DirectionForm, self).save(commit)
 
 class CommentForm(forms.ModelForm):
     class Meta:
