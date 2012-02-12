@@ -33,6 +33,12 @@
                 $("#submitLi").fadeOut("normal");
                 $("#openStatus").html("非公開");
             }
+        },
+
+        doneCopyButton : function (invoker, data) {
+            $("#copyButton").fadeOut("normal", function () {
+                GP.message("マイレシピに追加しました。");
+            });
         }
         
     });
