@@ -33,6 +33,10 @@
                 $("#submitLi").fadeOut("normal");
                 $("#openStatus").html("非公開");
             }
+        },
+
+        doneArrangeButton : function (invoker, data) {
+            location.href = "/recipe/"+ data.recipe_id + "/edit/";
         }
         
     });

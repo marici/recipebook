@@ -244,7 +244,6 @@ class RecipeForm(forms.ModelForm):
         self.fields["introduction"].widget = _text_area(5, 60)
         self.fields["tips"].widget = _text_area(3, 60)
 
-
 class BackendRecipeForm(forms.ModelForm):
     class Meta:
         model = models.Recipe

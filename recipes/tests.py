@@ -312,6 +312,137 @@ class RecipesViewsTest(TestCase):
         self.assertRedirects(response, edit_page_url, 302, 200)
         self.assertTrue(recipe.is_draft)
 
+    def test_copy_recipe_post_login(self):
+        """
+        url: recipes-copy(POST)
+        レシピをコピーする。コピー先レシピのIDを含むJSONが返される。
+        このときレシピはドラフトとなり、親IDがセットされる。
+        """
+        data = {
+            "recipe_id": 1,
+        }
+        original = Recipe.objects.get(pk=data["recipe_id"])
+        path = reverse("recipes-copy", kwargs={"recipe_id": data["recipe_id"]})
+        self.client.login(**user1)
+        response = self.client.post(path)
+        self.assertEqual(response.status_code, 200)
+        json = response.content
+        from django.utils import simplejson
+        json_obj = simplejson.loads(json)
+        self.assertEqual(json_obj["status"], "success")
+        new_recipe_id = json_obj["recipe_id"]
+        recipe = Recipe.objects.get(pk=new_recipe_id)
+        self.assertEqual(recipe.name, original.name)
+        self.assertEqual(recipe.photo, original.photo)
+        self.assertEqual(recipe.ingredients, original.ingredients)
+        self.assertEqual(recipe.num_people, original.num_people)
+        self.assertEqual(recipe.tips, original.tips)
+        self.assertEqual(recipe.user.username, user1['username'])
+        self.assertEqual(recipe.parent_id, data["recipe_id"])
+        self.assertEqual(recipe.ancestor_id, data["recipe_id"])
+        self.assertTrue(recipe.is_draft)
+
+    def test_copy_from_copy_post_login(self):
+        """
+        url: recipes-copy(POST)
+        レシピのコピーをコピーする。
+        レシピに先祖IDがセットされる。
+        """
+        def get_copy_recipe(json):
+            from django.utils import simplejson
+            json_obj = simplejson.loads(json)
+            new_recipe_id = json_obj["recipe_id"]
+            return Recipe.objects.get(pk=new_recipe_id)
+
+        data1 = {
+            "recipe_id": 1,
+        }
+        original = Recipe.objects.get(pk=data1["recipe_id"])
+        path = reverse("recipes-copy", kwargs={"recipe_id": data1["recipe_id"]})
+        self.client.login(**user1)
+        response = self.client.post(path)
+        new_recipe = get_copy_recipe(response.content)
+        new_recipe.is_draft = False
+        new_recipe.save()
+
+        data2 = {
+            "recipe_id": new_recipe.pk,
+        }
+        self.client.logout()
+        self.client.login(**user2)
+        path = reverse("recipes-copy", kwargs={"recipe_id": data2["recipe_id"]})
+        response = self.client.post(path)
+        recipe = get_copy_recipe(response.content)
+        self.assertEqual(recipe.name, new_recipe.name)
+        self.assertEqual(recipe.photo, new_recipe.photo)
+        self.assertEqual(recipe.ingredients, new_recipe.ingredients)
+        self.assertEqual(recipe.num_people, new_recipe.num_people)
+        self.assertEqual(recipe.tips, new_recipe.tips)
+        self.assertEqual(recipe.user.username, user2["username"])
+        self.assertEqual(recipe.parent_id, new_recipe.pk)
+        self.assertEqual(recipe.ancestor_id, data1["recipe_id"])
+        self.assertTrue(recipe.is_draft)
+
+    def test_copy_recipe_post_nologin(self):
+        """
+        url: recipes-copy(POST)
+        ログインしていない場合は403となる。
+        """
+        data = {
+            "recipe_id": 1,
+        }
+        path = reverse("recipes-copy", kwargs={"recipe_id": data["recipe_id"]})
+        response = self.client.post(path)
+        self.assertEqual(response.status_code, 403)
+        json = response.content
+        from django.utils import simplejson
+        json_obj = simplejson.loads(json)
+        self.assertEqual(json_obj["status"], "failure")
+        self.assertTrue("recipe_id" not in json_obj)
+
+    def test_copy_recipe_post_draft_other(self):
+        """
+        url: recipes-copy(POST)
+        他人の下書きはコピーできない。
+        """
+        data = {
+            "recipe_id": 1,
+        }
+        original = Recipe.objects.get(pk=data["recipe_id"])
+        original.is_draft = True
+        original.save()
+
+        path = reverse("recipes-copy", kwargs={"recipe_id": data["recipe_id"]})
+        self.client.login(**user2)
+        response = self.client.post(path)
+        self.assertEqual(response.status_code, 403)
+        json = response.content
+        from django.utils import simplejson
+        json_obj = simplejson.loads(json)
+        self.assertEqual(json_obj["status"], "failure")
+        self.assertTrue("recipe_id" not in json_obj)
+
+    def test_copy_recipe_post_draft_self(self):
+        """
+        url: recipes-copy(POST)
+        自分の下書きはコピーできる。
+        """
+        data = {
+            "recipe_id": 1,
+        }
+        original = Recipe.objects.get(pk=data["recipe_id"])
+        original.is_draft = True
+        original.save()
+
+        path = reverse("recipes-copy", kwargs={"recipe_id": data["recipe_id"]})
+        self.client.login(**user1)
+        response = self.client.post(path)
+        self.assertEqual(response.status_code, 200)
+        json = response.content
+        from django.utils import simplejson
+        json_obj = simplejson.loads(json)
+        self.assertEqual(json_obj["status"], "success")
+
     def test_toggle_recipe_open_state_nologin(self):
         """
         url:recipes-change-status
@@ -1974,5 +2105,3 @@ class UsersViewsTest(TestCase):
         path = reverse("active-users")
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
-
-

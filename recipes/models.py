@@ -468,6 +468,16 @@ class Recipe(models.Model):
             verbose_name=u"審査中のお題")
     num_people = models.IntegerField(u"分量の人数", default=2)
 
+    # コピー機能
+    parent = models.ForeignKey('self', verbose_name=u'元のレシピ',
+            related_name='children', editable=False, null=True, default=None)
+    ancestor = models.ForeignKey('self', null=True, editable=False,
+            default=None, verbose_name=u'大元のレシピ',
+            related_name='descendants')
+
+    def open_children(self):
+        return self.children.filter(is_draft=False)
+
     @models.permalink
     def get_absolute_url(self):
         return ("recipes-show", [str(self.id)])
@@ -521,7 +531,7 @@ class Recipe(models.Model):
     def add_direction(self, direction):
         direction.recipe = self
         direction.number = self.direction_set.count()
-            
+
     def set_request_user(self, user):
         self.is_favorite = self._is_favorite(user)
         self.is_voted = self._is_voted(user)
@@ -565,6 +575,30 @@ class Recipe(models.Model):
             # なければここで作成
             return False, cls.objects.create(user=user, recipe=self)
     
+    def copy(self, user):
+        data = {
+            'name': u'%s のアレンジ' % self.name,
+            'photo': self.photo,
+            'introduction': u'＜アレンジレシピの紹介文＞',
+            'ingredients': self.ingredients,
+            'num_people': self.num_people,
+            'tips': self.tips,
+            'parent': self,
+            'ancestor': self.parent or self,
+            'feeling': self.feeling,
+            'user': user,
+            'contest': self.contest,
+        }
+        new_recipe = self.__class__(**data)
+        new_recipe.save()
+        for direction in self.direction_set.all():
+            Direction(
+                recipe=new_recipe,
+                number=direction.number,
+                text=direction.text,
+                photo=direction.photo).save()
+        return new_recipe
+
     def moderated_comments(self):
         return Comment.objects.filter(recipe=self).filter(is_moderated=True)
     
