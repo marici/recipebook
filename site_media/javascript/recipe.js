@@ -35,10 +35,8 @@
             }
         },
 
-        doneCopyButton : function (invoker, data) {
-            $("#copyButton").fadeOut("normal", function () {
-                GP.message("マイレシピに追加しました。");
-            });
+        doneArrangeButton : function (invoker, data) {
+            location.href = "/recipe/"+ data.recipe_id + "/edit/";
         }
         
     });

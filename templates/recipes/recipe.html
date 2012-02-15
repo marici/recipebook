@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load humanize %}
 {% load thumbnail %}
+{% load textja %}
 
 {% block extrahead %}
     <script type="text/javascript" src="/site_media/javascript/recipe.js"></script>
@@ -15,6 +16,10 @@
     
     <ul class="ul_navi_func02">
     {% if user.is_authenticated %}
+        <li id="arrangeButton">
+        <a class="ajaxLink cb_doneArrangeButton"
+          href="{% url recipes-copy recipe_id=recipe.id %}">アレンジする</a>
+        </li>
     	{% ifequal recipe.user user %}
             {% if not recipe.is_awarded %}
                 {% if not recipe.contest or not recipe.published_at %}
@@ -26,7 +31,7 @@
                 </a></li>
             {% endif %}
             {% if not recipe.contest %}
-                <li id="submitLi"{% if recipe.is_draft %} style="display:none"{% endif %}><a id="submitToContestButton" href="{% url recipes-submit recipe_id=recipe.id %}">お題に応募する</a></li>
+                <li id="submitLi"{% if recipe.is_draft %} style="display:none"{% endif %}><a id="submitToContestButton" href="{% url recipes-submit recipe_id=recipe.id %}">お題に応募</a></li>
             {% endif %}
             {% if not recipe.is_awarded %}
                 <li><a id="deleteButton" href="{% url recipes-delete recipe_id=recipe.id %}">削除する</a></li>
@@ -42,10 +47,6 @@
                 <li id="voteButton"><a class="ajaxLink cb_doneVoteButton" 
                     href="{% url recipes-vote recipe_id=recipe.id %}">投票</a></li>
             {% endif %}
-            <li id="copyButton">
-            <a class="ajaxLink cb_doneCopyButton"
-              href="{% url recipes-copy recipe_id=recipe.id %}">マイレシピに追加</a>
-            </li>
         {% endifequal %}
         <li><a id="sendMailButton" href="{% url recipes-mail recipe_id=recipe.id %}">メールする</a></li>
     {% endif %}
@@ -82,7 +83,7 @@
         <li>投票された回数: <a href="{% url recipes-vote-users recipe_id=recipe.id %}">{{ recipe.score }}</a></li>
     {% endifnotequal %}
     {% if recipe.parent_id %}
-        <li>元のレシピ: {{ recipe.parent.user.first_name }}さんの <a href="{% url recipes-show recipe_id=recipe.parent_id %}">レシピ</a></li>
+    <li>{{ recipe.parent.user.first_name }}さんの <a href="{% url recipes-show recipe_id=recipe.parent_id %}">{{ recipe.parent.name }}</a> のアレンジです。</li>
     {% endif %}
     <!-- /ul01 --></ul>
     
@@ -161,6 +162,21 @@
     <!-- /div_alpha14_inner --></div>
     <!-- /div_alpha14 --></div>
     
+    <div class="div_alpha14">
+        <h3>みんなのアレンジレシピ！</h3>
+        <div class="div_alpha14_inner">
+            <ul class="ul02">
+            {% for child in recipe.open_children %}
+            <li>{% if child.photo %}<img src="{{ child.photo|thumbnail:"150x150" }}" />{% endif %}
+            <strong>{{ child.user.first_name }} さん</strong>
+            <a href="{% url recipes-show child.id  %}">{{ child.name }}</a>
+            <br />{{ child.introduction|abbr:40 }}
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+
     {% if comment_form %}
         <div class="div_alpha14">
         <h3>コメント {{ recipe.num_moderated_comments }} 件 （メンバーでないと見ることができません）</h3>

@@ -474,8 +474,9 @@ class Recipe(models.Model):
     ancestor = models.ForeignKey('self', null=True, editable=False,
             default=None, verbose_name=u'大元のレシピ',
             related_name='descendants')
-    retain_originality = models.BooleanField(u'オリジナルから変更あり',
-            default=False, editable=False)
+
+    def open_children(self):
+        return self.children.filter(is_draft=False)
 
     @models.permalink
     def get_absolute_url(self):
@@ -531,11 +532,6 @@ class Recipe(models.Model):
         direction.recipe = self
         direction.number = self.direction_set.count()
 
-    def edit(self, save=True):
-        if self.parent_id and self.retain_originality:
-            self.retain_originality = False
-            if save: self.save()
-            
     def set_request_user(self, user):
         self.is_favorite = self._is_favorite(user)
         self.is_voted = self._is_voted(user)
@@ -581,15 +577,14 @@ class Recipe(models.Model):
     
     def copy(self, user):
         data = {
-            'name': self.name,
+            'name': u'%s のアレンジ' % self.name,
             'photo': self.photo,
-            'introduction': self.introduction,
+            'introduction': u'＜アレンジレシピの紹介文＞',
             'ingredients': self.ingredients,
             'num_people': self.num_people,
             'tips': self.tips,
             'parent': self,
             'ancestor': self.parent or self,
-            'retain_originality': True,
             'feeling': self.feeling,
             'user': user,
             'contest': self.contest,
