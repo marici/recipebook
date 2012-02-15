@@ -332,7 +332,7 @@ class RecipesViewsTest(TestCase):
         self.assertEqual(json_obj["status"], "success")
         new_recipe_id = json_obj["recipe_id"]
         recipe = Recipe.objects.get(pk=new_recipe_id)
-        self.assertEqual(recipe.name, original.name)
+        self.assertEqual(recipe.name, u'%s のアレンジ' % original.name)
         self.assertEqual(recipe.photo, original.photo)
         self.assertEqual(recipe.ingredients, original.ingredients)
         self.assertEqual(recipe.num_people, original.num_people)
@@ -373,7 +373,7 @@ class RecipesViewsTest(TestCase):
         path = reverse("recipes-copy", kwargs={"recipe_id": data2["recipe_id"]})
         response = self.client.post(path)
         recipe = get_copy_recipe(response.content)
-        self.assertEqual(recipe.name, new_recipe.name)
+        self.assertEqual(recipe.name, u'%s のアレンジ' % new_recipe.name)
         self.assertEqual(recipe.photo, new_recipe.photo)
         self.assertEqual(recipe.ingredients, new_recipe.ingredients)
         self.assertEqual(recipe.num_people, new_recipe.num_people)
