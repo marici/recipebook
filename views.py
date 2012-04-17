@@ -1,5 +1,5 @@
 # coding: utf-8
-"""
+'''
 The MIT License
 
 Copyright (c) 2009 Marici, Inc.
@@ -21,7 +21,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-"""
+'''
 
 import random
 from datetime import datetime, timedelta
@@ -30,47 +30,48 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.conf import settings
-from recipebook.maricilib.django.decorators.db import use_master, use_slave
 from recipes.models import *
 
-@use_slave
+
 def top(request):
-    featured_contest = cache.get("views_top_featured_contest")
+    featured_contest = cache.get('views_top_featured_contest')
     if featured_contest is None:
         current_contests = Contest.objects.get_current_contests()
         if current_contests:
             featured_contest = random.choice(list(current_contests))
         else:
             featured_contest = None
-        cache.set("views_top_featured_contest", featured_contest)
+        cache.set('views_top_featured_contest', featured_contest)
     closed_contests = Contest.objects.get_closed_contests_qs()
-    
-    d = {"featured_contest":featured_contest,
-         "closed_contests":closed_contests}
-    return render_to_response("top.html", 
+
+    d = {'featured_contest': featured_contest,
+         'closed_contests': closed_contests}
+    return render_to_response('top.html',
             d, RequestContext(request))
 
-@use_slave
+
 def search(request, query=None):
-    query = query or request.GET["query"]
-    title = u"%s の検索結果" % query
+    query = query or request.GET['query']
+    title = u'%s の検索結果' % query
     if query:
         queries = query.split()
         recipes = Recipe.objects.search(queries)
         contests = Contest.objects.search(queries, per_page=5)
     else:
         recipes = contests = []
-    return render_to_response("search.html",
-            {"query":query,
-             "recipes":recipes,
-             "contests":contests,
-             "title":title},
+    return render_to_response('search.html',
+            {'query': query,
+             'recipes': recipes,
+             'contests': contests,
+             'title': title},
             RequestContext(request))
+
 
 def show_search_form(request):
     d = {}
-    return render_to_response("search_form.html",
+    return render_to_response('search_form.html',
             d, RequestContext(request))
-    
+
+
 def redirect_temporarily(request, url):
     return HttpResponseRedirect(url)

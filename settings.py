@@ -90,13 +90,14 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.auth',
     'django.core.context_processors.media',
-    'recipebook.maricilib.django.core.context_processors.current_site',
-    'recipebook.maricilib.django.core.context_processors.settings',
-    'recipebook.recipes.context_processors.side1',
-    'recipebook.maricilib.django.apps.feedback.context_processors.form',
     'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+    'maricilib.django.core.context_processors.settings',
+    'maricilib.django.core.context_processors.current_site',
+    'maricilib.django.apps.feedback.context_processors.form',
+    'recipes.context_processors.side1',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -106,6 +107,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'recipebook.urls'
@@ -124,12 +126,13 @@ INSTALLED_APPS = (
     'django.contrib.formtools',
     'django.contrib.humanize',
     'django.contrib.localflavor',
-    'recipebook.maricilib.django.apps.sitenews',
-    'recipebook.maricilib.django.apps.documents',
-    'recipebook.maricilib.django.apps.search',
-    'recipebook.maricilib.django.apps.daily',
-    'recipebook.maricilib.django.apps.taskqueue',
-    'recipebook.maricilib.django.apps.feedback',
+    'django.contrib.messages',
+    'maricilib.django.apps.sitenews',
+    'maricilib.django.apps.documents',
+    'maricilib.django.apps.search',
+    'maricilib.django.apps.daily',
+    'maricilib.django.apps.taskqueue',
+    'maricilib.django.apps.feedback',
     'recipebook.recipes',
 )
 
@@ -160,7 +163,7 @@ LOGIN_REDIRECT_URL = '/home/'
 
 AUTH_PROFILE_MODULE = 'recipes.UserProfile'
 
-COPYRIGHT = u'&copy; 2009 recipebook.jp'
+COPYRIGHT = u'&copy; 2009-2012 recipebook.jp'
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25

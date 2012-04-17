@@ -1,5 +1,5 @@
 # coding: utf-8
-"""
+'''
 The MIT License
 
 Copyright (c) 2009 Marici, Inc.
@@ -21,23 +21,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-"""
+'''
 from django.conf import settings as django_settings
-from django.contrib.csrf import middleware
 from django.contrib.sites.models import Site
 
-def csrf(request):
-    csrf_token = None
-    try:
-        session_id = request.COOKIES[django_settings.SESSION_COOKIE_NAME]
-        csrf_token = middleware._make_token(session_id)
-    except KeyError:
-        pass
-    return {"csrf_token":csrf_token}
 
 def current_site(request):
-    return {"current_site":Site.objects.get_current()}
+    return {'current_site': Site.objects.get_current()}
+
 
 def settings(request):
-    return {"settings":django_settings}
-
+    return {'settings': django_settings}
