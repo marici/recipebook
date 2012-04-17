@@ -1,5 +1,5 @@
-# coding: utf-8
-"""
+# -*- coding: utf-8 -*-
+'''
 The MIT License
 
 Copyright (c) 2009 Marici, Inc.
@@ -21,7 +21,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-"""
+'''
 
 on_vote_to_user = 2
 on_comment_to_user = 1

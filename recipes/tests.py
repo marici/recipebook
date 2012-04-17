@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 '''
 The MIT License
 
@@ -31,6 +31,7 @@ from recipes import forms
 user1 = {'username': 'testuser1_at_marici_co_jp', 'password': 'password'}
 user2 = {'username': 'testuser2_at_marici_co_jp', 'password': 'password'}
 user3 = {'username': 'testuser3_at_marici_co_jp', 'password': 'password'}
+
 
 class RecipesViewsTest(TestCase):
     '''
@@ -261,7 +262,8 @@ class RecipesViewsTest(TestCase):
         '''
         path = reverse('recipes-register', kwargs={})
         response = self.client.get(path)
-        self.assertRedirects(response, '/accounts/login/?next=/recipe/register/', 302, 200)
+        self.assertRedirects(response,
+                '/accounts/login/?next=/recipe/register/', 302, 200)
 
     def test_register_recipe_get_login(self):
         '''
@@ -280,7 +282,8 @@ class RecipesViewsTest(TestCase):
         '''
         path = reverse('recipes-register')
         response = self.client.post(path)
-        self.assertRedirects(response,'/accounts/login/?next=/recipe/register/', 302, 200)
+        self.assertRedirects(response,
+                '/accounts/login/?next=/recipe/register/', 302, 200)
 
     def test_register_recipe_post_login_incomplete(self):
         '''
@@ -310,7 +313,8 @@ class RecipesViewsTest(TestCase):
         self.client.login(**user1)
         response = self.client.post(path, post_data)
         recipe = Recipe.objects.get(name='Test New Recipe Name')
-        edit_page_url = reverse('recipes-edit', kwargs={'recipe_id': recipe.id})
+        edit_page_url = reverse('recipes-edit',
+                kwargs={'recipe_id': recipe.id})
         self.assertRedirects(response, edit_page_url, 302, 200)
         self.assertTrue(recipe.is_draft)
 
@@ -360,7 +364,8 @@ class RecipesViewsTest(TestCase):
             'recipe_id': 1,
         }
         original = Recipe.objects.get(pk=data1['recipe_id'])
-        path = reverse('recipes-copy', kwargs={'recipe_id': data1['recipe_id']})
+        path = reverse('recipes-copy',
+                kwargs={'recipe_id': data1['recipe_id']})
         self.client.login(**user1)
         response = self.client.post(path)
         new_recipe = get_copy_recipe(response.content)
@@ -372,7 +377,8 @@ class RecipesViewsTest(TestCase):
         }
         self.client.logout()
         self.client.login(**user2)
-        path = reverse('recipes-copy', kwargs={'recipe_id': data2['recipe_id']})
+        path = reverse('recipes-copy',
+                kwargs={'recipe_id': data2['recipe_id']})
         response = self.client.post(path)
         recipe = get_copy_recipe(response.content)
         self.assertEqual(recipe.name, u'%s のアレンジ' % new_recipe.name)
@@ -451,9 +457,10 @@ class RecipesViewsTest(TestCase):
         ログインしていない場合、ログインページへリダイレクトる。
         '''
         recipe_id = 1
-        path = reverse('recipes-change-status', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-change-status',
+                kwargs={'recipe_id': recipe_id})
         response = self.client.post(path)
-        login_page_url = reverse('recipes-users-login')+'?next='+path
+        login_page_url = reverse('recipes-users-login') + '?next=' + path
         self.assertRedirects(response, login_page_url, 302, 200)
 
     def test_toggle_recipe_open_state_login_another_user(self):
@@ -462,7 +469,8 @@ class RecipesViewsTest(TestCase):
         ログイン者と対象のレシピの作成者が違う場合、403が返される。
         '''
         recipe_id = 1
-        path = reverse('recipes-change-status', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-change-status',
+                kwargs={'recipe_id': recipe_id})
         self.client.login(**user2)
         response = self.client.post(path)
         recipe = Recipe.objects.get(pk=recipe_id)
@@ -475,7 +483,8 @@ class RecipesViewsTest(TestCase):
         指定されたIDが無い場合、404が返される。
         '''
         recipe_id = 10000
-        path = reverse('recipes-change-status', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-change-status',
+                kwargs={'recipe_id': recipe_id})
         self.client.login(**user1)
         response = self.client.post(path)
         self.assertEquals(response.status_code, 404)
@@ -487,11 +496,13 @@ class RecipesViewsTest(TestCase):
         '''
         recipe_id = 1
         recipe = Recipe.objects.get(pk=recipe_id)
-        path = reverse('recipes-change-status', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-change-status',
+                kwargs={'recipe_id': recipe_id})
         self.client.login(**user1)
         response = self.client.post(path)
         self.assertEquals(recipe.user.username, user1['username'])
-        edit_page_url = reverse('recipes-edit', kwargs={'recipe_id': recipe_id})
+        edit_page_url = reverse('recipes-edit',
+                kwargs={'recipe_id': recipe_id})
         self.assertEquals(response.status_code, 200)
 
     def test_toggle_recipe_open_state_awarded(self):
@@ -503,11 +514,13 @@ class RecipesViewsTest(TestCase):
         recipe = Recipe.objects.get(pk=recipe_id)
         recipe.is_awarded = True
         recipe.save()
-        path = reverse('recipes-change-status', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-change-status',
+                kwargs={'recipe_id': recipe_id})
         self.client.login(**user1)
         response = self.client.post(path)
         self.assertEquals(recipe.user.username, user1['username'])
-        edit_page_url = reverse('recipes-edit', kwargs={'recipe_id': recipe_id})
+        edit_page_url = reverse('recipes-edit',
+                kwargs={'recipe_id': recipe_id})
         self.assertEquals(response.status_code, 403)
 
     def test_edit_recipe_get_nologin(self):
@@ -518,7 +531,7 @@ class RecipesViewsTest(TestCase):
         recipe_id = 1
         path = reverse('recipes-edit', kwargs={'recipe_id': recipe_id})
         response = self.client.get(path)
-        login_page_url = reverse('recipes-users-login')+'?next='+path
+        login_page_url = reverse('recipes-users-login') + '?next=' + path
         self.assertRedirects(response, login_page_url, 302, 200)
 
     def test_edit_recipe_get_login_another_user(self):
@@ -615,7 +628,7 @@ class RecipesViewsTest(TestCase):
         recipe_id = 1
         path = reverse('recipes-edit', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path)
-        login_page_url = reverse('recipes-users-login')+'?next='+path
+        login_page_url = reverse('recipes-users-login') + '?next=' + path
         self.assertRedirects(response, login_page_url, 302, 200)
 
     def test_edit_recipe_post_login_another_user(self):
@@ -753,9 +766,10 @@ class RecipesViewsTest(TestCase):
         ログインしていない場合はログインページへリダイレクトされ、302が返される。
         '''
         recipe_id = 1
-        path = reverse('recipes-direction-register', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-direction-register',
+                kwargs={'recipe_id': recipe_id})
         response = self.client.post(path)
-        login_page_url = reverse('recipes-users-login')+'?next='+path
+        login_page_url = reverse('recipes-users-login') + '?next=' + path
         self.assertRedirects(response, login_page_url, 302, 200)
 
     def test_register_direction_login_another_user(self):
@@ -764,7 +778,8 @@ class RecipesViewsTest(TestCase):
         ログイン者と対象のレシピの作成者が違う場合、403が返される。
         '''
         recipe_id = 1
-        path = reverse('recipes-direction-register', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-direction-register',
+                kwargs={'recipe_id': recipe_id})
         self.client.login(**user2)
         response = self.client.post(path)
         recipe = Recipe.objects.get(pk=recipe_id)
@@ -777,7 +792,8 @@ class RecipesViewsTest(TestCase):
         指定されたIDが無い場合、404が返される。
         '''
         recipe_id = 10000
-        path = reverse('recipes-direction-register', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-direction-register',
+                kwargs={'recipe_id': recipe_id})
         self.client.login(**user1)
         response = self.client.post(path)
         self.assertEquals(response.status_code, 404)
@@ -790,7 +806,8 @@ class RecipesViewsTest(TestCase):
         recipe_id = 1
         recipe = Recipe.objects.get(pk=recipe_id)
         self.assertEquals(recipe.user.username, user1['username'])
-        path = reverse('recipes-direction-register', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-direction-register',
+                kwargs={'recipe_id': recipe_id})
         self.client.login(**user1)
         response = self.client.post(path, {'text': 'directon test'})
         self.assertEquals(response.status_code, 200)
@@ -803,7 +820,7 @@ class RecipesViewsTest(TestCase):
         recipe_id = 1
         path = reverse('recipes-favorite-add', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path)
-        login_page_url = reverse('recipes-users-login')+'?next='+path
+        login_page_url = reverse('recipes-users-login') + '?next=' + path
         self.assertRedirects(response, login_page_url, 302, 200)
 
     def test_add_favorite_recipe_login_another_user(self):
@@ -830,7 +847,6 @@ class RecipesViewsTest(TestCase):
         response = self.client.post(path)
         self.assertEquals(response.status_code, 404)
 
-
     def test_add_favorite_recipe_login(self):
         '''
         url: recipes-favorite-add
@@ -850,9 +866,10 @@ class RecipesViewsTest(TestCase):
         ログインしていない場合はログインページへリダイレクトされ、302が返される。
         '''
         recipe_id = 1
-        path = reverse('recipes-favorite-remove', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-favorite-remove',
+                kwargs={'recipe_id': recipe_id})
         response = self.client.post(path)
-        login_page_url = reverse('recipes-users-login')+'?next='+path
+        login_page_url = reverse('recipes-users-login') + '?next=' + path
         self.assertRedirects(response, login_page_url, 302, 200)
 
     def test_remove_favorite_recipe_login_another_user(self):
@@ -866,7 +883,8 @@ class RecipesViewsTest(TestCase):
         response = self.client.post(path)
         self.assertEquals(response.status_code, 200)
 
-        path = reverse('recipes-favorite-remove', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-favorite-remove',
+                kwargs={'recipe_id': recipe_id})
         self.client.login(**user3)
         response = self.client.post(path)
         recipe = Recipe.objects.get(pk=recipe_id)
@@ -879,7 +897,8 @@ class RecipesViewsTest(TestCase):
         指定されたIDが無い場合、404が返される。
         '''
         recipe_id = 10000
-        path = reverse('recipes-favorite-remove', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-favorite-remove',
+                kwargs={'recipe_id': recipe_id})
         self.client.login(**user1)
         response = self.client.post(path)
         self.assertEquals(response.status_code, 404)
@@ -896,7 +915,8 @@ class RecipesViewsTest(TestCase):
         path = reverse('recipes-favorite-add', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path)
         self.assertEquals(response.status_code, 200)
-        path = reverse('recipes-favorite-remove', kwargs={'recipe_id': recipe_id})
+        path = reverse('recipes-favorite-remove',
+                kwargs={'recipe_id': recipe_id})
         response = self.client.post(path)
         self.assertEquals(response.status_code, 200)
 
@@ -908,7 +928,7 @@ class RecipesViewsTest(TestCase):
         recipe_id = 1
         path = reverse('recipes-vote', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path)
-        login_page_url = reverse('recipes-users-login')+'?next='+path
+        login_page_url = reverse('recipes-users-login') + '?next=' + path
         self.assertRedirects(response, login_page_url, 302, 200)
 
     def test_vote_to_recipe_login_another_user(self):
@@ -956,7 +976,7 @@ class RecipesViewsTest(TestCase):
         recipe_id = 1
         path = reverse('recipes-comment-add', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path)
-        login_page_url = reverse('recipes-users-login')+'?next='+path
+        login_page_url = reverse('recipes-users-login') + '?next=' + path
         self.assertRedirects(response, login_page_url, 302, 200)
 
     def test_comment_to_recipe_login_another_user(self):
@@ -1015,10 +1035,11 @@ class RecipesViewsTest(TestCase):
         path = reverse('recipes-comment-add', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path, post_data)
         comment = Comment.objects.get(text=post_data['text'])
-        path = reverse('recipes-comment-delete', kwargs={'comment_id': comment.id})
+        path = reverse('recipes-comment-delete',
+                kwargs={'comment_id': comment.id})
         self.client.logout()
         response = self.client.post(path)
-        login_page_url = reverse('recipes-users-login')+'?next='+path
+        login_page_url = reverse('recipes-users-login') + '?next=' + path
         self.assertRedirects(response, login_page_url, 302, 200)
 
     def test_delete_comment_login_comment_owner(self):
@@ -1032,7 +1053,8 @@ class RecipesViewsTest(TestCase):
         path = reverse('recipes-comment-add', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path, post_data)
         comment = Comment.objects.get(text=post_data['text'])
-        path = reverse('recipes-comment-delete', kwargs={'comment_id': comment.id})
+        path = reverse('recipes-comment-delete',
+                kwargs={'comment_id': comment.id})
         response = self.client.post(path)
         self.assertEquals(response.status_code, 200)
         try:
@@ -1052,7 +1074,8 @@ class RecipesViewsTest(TestCase):
         path = reverse('recipes-comment-add', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path, post_data)
         comment = Comment.objects.get(text=post_data['text'])
-        path = reverse('recipes-comment-delete', kwargs={'comment_id': comment.id})
+        path = reverse('recipes-comment-delete',
+                kwargs={'comment_id': comment.id})
         self.client.login(**user3)
         response = self.client.post(path)
         self.assertEquals(response.status_code, 403)
@@ -1091,7 +1114,8 @@ class RecipesViewsTest(TestCase):
         path = reverse('recipes-comment-add', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path, post_data)
         comment = Comment.objects.get(text=post_data['text'])
-        path = reverse('recipes-comment-delete', kwargs={'comment_id': comment.id})
+        path = reverse('recipes-comment-delete',
+                kwargs={'comment_id': comment.id})
         self.client.login(**user1)
         response = self.client.post(path)
         self.assertEquals(response.status_code, 200)
@@ -1112,10 +1136,11 @@ class RecipesViewsTest(TestCase):
         path = reverse('recipes-comment-add', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path, post_data)
         comment = Comment.objects.get(text=post_data['text'])
-        path = reverse('recipes-comment-approve', kwargs={'comment_id': comment.id})
+        path = reverse('recipes-comment-approve',
+                kwargs={'comment_id': comment.id})
         self.client.logout()
         response = self.client.post(path)
-        login_page_url = reverse('recipes-users-login')+'?next='+path
+        login_page_url = reverse('recipes-users-login') + '?next=' + path
         self.assertRedirects(response, login_page_url, 302, 200)
 
     def test_approve_comment_login_another_user(self):
@@ -1129,7 +1154,8 @@ class RecipesViewsTest(TestCase):
         path = reverse('recipes-comment-add', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path, post_data)
         comment = Comment.objects.get(text=post_data['text'])
-        path = reverse('recipes-comment-approve', kwargs={'comment_id': comment.id})
+        path = reverse('recipes-comment-approve',
+                kwargs={'comment_id': comment.id})
         response = self.client.post(path)
         self.assertEquals(response.status_code, 403)
         comment = Comment.objects.get(text=post_data['text'])
@@ -1161,7 +1187,8 @@ class RecipesViewsTest(TestCase):
         path = reverse('recipes-comment-add', kwargs={'recipe_id': recipe_id})
         response = self.client.post(path, post_data)
         comment = Comment.objects.get(text=post_data['text'])
-        path = reverse('recipes-comment-approve', kwargs={'comment_id': comment.id})
+        path = reverse('recipes-comment-approve',
+                kwargs={'comment_id': comment.id})
         self.client.login(**user1)
         response = self.client.post(path)
         self.assertEquals(response.status_code, 200)
@@ -1281,7 +1308,8 @@ class ContestsViewsTest(TestCase):
         current.published_at = datetime.now() - timedelta(days=1)
         current.closed_at = datetime.now() + timedelta(days=1)
         current.save()
-        path = reverse('recipes-contests-show', kwargs={'contest_id': current.pk})
+        path = reverse('recipes-contests-show',
+                kwargs={'contest_id': current.pk})
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context[0]['contest'].pk, current.pk)
@@ -1310,7 +1338,8 @@ class ContestsViewsTest(TestCase):
         future.published_at = datetime.now() + timedelta(days=1)
         future.closed_at = datetime.now() + timedelta(days=2)
         future.save()
-        path = reverse('recipes-contests-show', kwargs={'contest_id': future.pk})
+        path = reverse('recipes-contests-show',
+                kwargs={'contest_id': future.pk})
         response = self.client.get(path)
         self.assertEqual(response.status_code, 404)
 
@@ -1324,7 +1353,8 @@ class ContestsViewsTest(TestCase):
         recipe.contest = contest
         recipe.is_draft = False
         recipe.save()
-        path = reverse('recipes-contests-recipes', kwargs={'contest_id': contest.pk})
+        path = reverse('recipes-contests-recipes',
+                kwargs={'contest_id': contest.pk})
         response = self.client.get(path)
         self.assertContains(response, recipe.name.encode('utf-8'))
 
@@ -1338,7 +1368,8 @@ class ContestsViewsTest(TestCase):
         recipe.contest = contest
         recipe.is_draft = True
         recipe.save()
-        path = reverse('recipes-contests-recipes', kwargs={'contest_id': contest.pk})
+        path = reverse('recipes-contests-recipes',
+                kwargs={'contest_id': contest.pk})
         response = self.client.get(path)
         self.assertNotContains(response, recipe.name.encode('utf-8'))
 
@@ -1829,7 +1860,8 @@ class UsersViewsTest(TestCase):
         u1 = User.objects.get(username=user1.get('username'))
         u2 = User.objects.get(username=user2.get('username'))
         fav = FavoriteUser.objects.create(user=u1, target=u2)
-        path = reverse('recipes-users-favorite-remove', kwargs={'user_id': u2.id})
+        path = reverse('recipes-users-favorite-remove',
+                kwargs={'user_id': u2.id})
         response = self.client.post(path)
         login_page_url = '%s?next=%s' % (reverse('recipes-users-login'), path)
         self.assertRedirects(response, login_page_url, 302, 200)
@@ -1842,7 +1874,8 @@ class UsersViewsTest(TestCase):
         u1 = User.objects.get(username=user1.get('username'))
         u2 = User.objects.get(username=user2.get('username'))
         fav = FavoriteUser.objects.create(user=u1, target=u2)
-        path = reverse('recipes-users-favorite-remove', kwargs={'user_id': u2.id})
+        path = reverse('recipes-users-favorite-remove',
+                kwargs={'user_id': u2.id})
         self.client.login(**user3)
         response = self.client.post(path)
         self.assertEqual(response.status_code, 404)
@@ -1861,7 +1894,8 @@ class UsersViewsTest(TestCase):
         fav = FavoriteUser.objects.create(user=u1, target=u2)
         u2.is_active = False
         u2.save()
-        path = reverse('recipes-users-favorite-remove', kwargs={'user_id': u2.id})
+        path = reverse('recipes-users-favorite-remove',
+                kwargs={'user_id': u2.id})
         self.client.login(**user1)
         response = self.client.post(path)
         self.assertEqual(response.status_code, 200)
@@ -1880,7 +1914,8 @@ class UsersViewsTest(TestCase):
         u1 = User.objects.get(username=user1.get('username'))
         u2 = User.objects.get(username=user2.get('username'))
         fav = FavoriteUser.objects.create(user=u1, target=u2)
-        path = reverse('recipes-users-favorite-remove', kwargs={'user_id': u2.id})
+        path = reverse('recipes-users-favorite-remove',
+                kwargs={'user_id': u2.id})
         self.client.login(**user1)
         response = self.client.post(path)
         self.assertEqual(response.status_code, 200)
@@ -1899,7 +1934,8 @@ class UsersViewsTest(TestCase):
         u1 = User.objects.get(username=user1.get('username'))
         u1.is_active = False
         u1.save()
-        path = reverse('recipes-users-favorite-recipes-show', kwargs={'user_id': u1.id})
+        path = reverse('recipes-users-favorite-recipes-show',
+                kwargs={'user_id': u1.id})
         response = self.client.get(path)
         self.assertEqual(response.status_code, 404)
 
@@ -1912,7 +1948,8 @@ class UsersViewsTest(TestCase):
         u2 = User.objects.get(username=user2.get('username'))
         self.assertTrue(u1.is_active)
         fav = FavoriteUser.objects.create(user=u1, target=u2)
-        path = reverse('recipes-users-favorite-users-show', kwargs={'user_id': u1.id})
+        path = reverse('recipes-users-favorite-users-show',
+                kwargs={'user_id': u1.id})
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, u2.first_name.encode('utf-8'))
@@ -1927,7 +1964,8 @@ class UsersViewsTest(TestCase):
         fav = FavoriteUser.objects.create(user=u1, target=u2)
         u1.is_active = False
         u1.save()
-        path = reverse('recipes-users-favorite-users-show', kwargs={'user_id': u1.id})
+        path = reverse('recipes-users-favorite-users-show',
+                kwargs={'user_id': u1.id})
         response = self.client.get(path)
         self.assertEqual(response.status_code, 404)
 
@@ -2031,7 +2069,8 @@ class UsersViewsTest(TestCase):
         response = self.client.post(path, post_data)
         self.assertEqual(response.status_code, 200)
         u1 = User.objects.get(username=user1.get('username'))
-        path = reverse('recipes-users-validate-email', kwargs={'user_id': u1.pk, 'key': 'invalid_key'})
+        path = reverse('recipes-users-validate-email',
+                kwargs={'user_id': u1.pk, 'key': 'invalid_key'})
         response = self.client.get(path)
         self.assertEqual(response.status_code, 403)
         u1 = User.objects.get(pk=u1.pk)
@@ -2055,7 +2094,8 @@ class UsersViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         u1 = User.objects.get(pk=u1.pk)
         self.assertEquals(u1.email, post_data.get('email'))
-        self.assertEquals(u1.username, forms.email_to_username(post_data.get('email')))
+        self.assertEquals(u1.username,
+                forms.email_to_username(post_data.get('email')))
 
     def test_login_get_nologin(self):
         '''

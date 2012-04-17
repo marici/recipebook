@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 '''
 The MIT License
 
@@ -41,9 +41,11 @@ from recipebook.maricilib.django.apps.taskqueue.tasks import SendEmailTask
 from recipebook.recipes.models import *
 from recipebook.recipes import forms
 
+
 def user_is_active_or_404(user):
     if not user.is_active:
         raise Http404
+
 
 def show_recipe(request, recipe_id=None):
     '''
@@ -77,6 +79,7 @@ def show_recipe(request, recipe_id=None):
     return render_to_response('recipes/recipe.html',
         d, RequestContext(request))
 
+
 @getmethod
 def show_recipe_for_print(request, recipe_id=None):
     '''
@@ -93,6 +96,7 @@ def show_recipe_for_print(request, recipe_id=None):
     return render_to_response('recipes/recipe_print.html',
         d, RequestContext(request))
 
+
 @getmethod
 @login_required
 def register_recipe(request, contest_id=None):
@@ -108,6 +112,7 @@ def register_recipe(request, contest_id=None):
     d = {'form': form}
     return render_to_response('recipes/new_recipe_form.html',
         d, RequestContext(request))
+
 
 @postmethod
 @login_required
@@ -142,6 +147,7 @@ def register_recipe(request, contest_id=None):
     return HttpResponseRedirect(reverse('recipes-edit',
                                         kwargs={'recipe_id': recipe.id}))
 
+
 @postmethod
 @login_required
 def toggle_recipe_open_state(request, recipe_id=None):
@@ -163,8 +169,9 @@ def toggle_recipe_open_state(request, recipe_id=None):
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
     recipe.toggle_open_state()
     recipe.save()
-    data = serializers.serialize('json', [recipe]) # TODO: 情報を削減
+    data = serializers.serialize('json', [recipe])  # TODO: 情報を削減
     return HttpResponse(data, mimetype='application/json')
+
 
 def render_edit_recipe_page(request, recipe, form):
     '''
@@ -178,6 +185,7 @@ def render_edit_recipe_page(request, recipe, form):
          'directions': directions}
     return render_to_response('recipes/edit_recipe_form.html',
             d, RequestContext(request))
+
 
 @getmethod
 @login_required
@@ -204,6 +212,7 @@ def edit_recipe(request, recipe_id=None):
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
     form = forms.RecipeForm(instance=recipe)
     return render_edit_recipe_page(request, recipe, form)
+
 
 @postmethod
 @login_required
@@ -238,6 +247,7 @@ def edit_recipe(request, recipe_id=None):
     return HttpResponseRedirect(reverse('recipes-edit',
                                         kwargs={'recipe_id': recipe.id}))
 
+
 @postmethod
 @login_required
 def delete_recipe(request, recipe_id=None):
@@ -262,6 +272,7 @@ def delete_recipe(request, recipe_id=None):
     recipe.delete()
     messages.add_message(request, messages.INFO, message)
     return HttpResponseRedirect(redirect_path)
+
 
 @postmethod
 @login_required
@@ -291,8 +302,9 @@ def mail_recipe(request, recipe_id=None):
                               from_address=settings.EMAIL_FROM,
                               to_list=[email]))
     get_taskqueue().send_task(task, queue_name=settings.QUEUENAME_EMAIL)
-    json = serializers.serialize('json', [recipe]) # TODO: 情報削減
+    json = serializers.serialize('json', [recipe])  # TODO: 情報削減
     return HttpResponse(json, mimetype='application/json')
+
 
 @postmethod
 @login_required
@@ -323,6 +335,7 @@ def submit_recipe_to_contest(request, recipe_id):
         json = ''
     return HttpResponse(json, mimetype='application/json')
 
+
 def show_voting_users(request, recipe_id):
     '''
     指定されたIDのレシピに投票したユーザの一覧を表示します。
@@ -340,11 +353,12 @@ def show_voting_users(request, recipe_id):
     u_and_p = UserProfile.objects.get_zipped_profiles(users,
                                                   users.values('pk').query)
     links = [{'name': recipe.name,
-              'url': reverse('recipes-show', kwargs={'recipe_id': recipe.id})} ]
+              'url': reverse('recipes-show', kwargs={'recipe_id': recipe.id})}]
     d = {'users_and_profiles': u_and_p, 'links': links,
          'title': u'%s に投票したメンバー' % recipe.name}
     return render_to_response('recipes/users.html',
                               d, RequestContext(request))
+
 
 @postmethod
 def copy_recipe(request, recipe_id=None):
@@ -374,6 +388,7 @@ def copy_recipe(request, recipe_id=None):
     json = simplejson.dumps({'status': 'success', 'recipe_id': new_recipe.pk})
     return HttpResponse(json, 'application/json')
 
+
 @postmethod
 @login_required
 def register_direction(request, recipe_id=None):
@@ -392,7 +407,8 @@ def register_direction(request, recipe_id=None):
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
     form = forms.DirectionForm(request.POST, request.FILES)
     if not form.is_valid():
-        json = simplejson.dumps({'status': 'error', 'message': 'form is not valid.'})
+        json = simplejson.dumps({'status': 'error',
+            'message': 'form is not valid.'})
         direction = None
     else:
         direction = form.save(commit=False)
@@ -401,14 +417,15 @@ def register_direction(request, recipe_id=None):
         d = {'status': 'success',
              'message': '',
              'direction': {'pk': direction.id,
-                          'fields': {'text': direction.text,
-                                    'photo': direction.photo and direction.photo.url or ''}}}
+                 'fields': {'text': direction.text,
+                 'photo': direction.photo and direction.photo.url or ''}}}
         json = simplejson.dumps(d)
     if direction.photo:
         data = '<textarea>%s</textarea>' % json
     else:
         data = json
     return HttpResponse(data, mimetype='text/html')
+
 
 @postmethod
 @login_required
@@ -436,6 +453,7 @@ def edit_direction(request, recipe_id=None, direction_id=None):
     json = serializers.serialize('json', [direction])
     return HttpResponse(json, mimetype='application/json')
 
+
 @postmethod
 @login_required
 def delete_direction(request, recipe_id=None, direction_id=None):
@@ -457,8 +475,9 @@ def delete_direction(request, recipe_id=None, direction_id=None):
     if recipe != direction.recipe:
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
     json = serializers.serialize('json', [direction])
-    direction.delete();
+    direction.delete()
     return HttpResponse(json, mimetype='application/json')
+
 
 @postmethod
 @login_required
@@ -488,6 +507,7 @@ def sort_directions(request, recipe_id=None):
     json = simplejson.dumps(direction_ids)
     return HttpResponse(json, mimetype='application/json')
 
+
 @postmethod
 @login_required
 def add_favorite_recipe(request, recipe_id=None):
@@ -513,6 +533,7 @@ def add_favorite_recipe(request, recipe_id=None):
     fav = recipe.favorite(request.user)
     data = serializers.serialize('json', [fav])
     return HttpResponse(data, mimetype='application/json')
+
 
 @postmethod
 @login_required
@@ -540,6 +561,7 @@ def remove_favorite_recipe(request, recipe_id=None):
         raise Http404
     return HttpResponse(data, mimetype='application/json')
 
+
 @postmethod
 @login_required
 def vote_to_recipe(request, recipe_id=None):
@@ -561,6 +583,7 @@ def vote_to_recipe(request, recipe_id=None):
     recipe.save()
     data = serializers.serialize('json', [vote])
     return HttpResponse(data, mimetype='application/json')
+
 
 @postmethod
 @login_required
@@ -607,6 +630,7 @@ def comment_to_recipe(request, recipe_id=None):
     return HttpResponseRedirect(reverse('recipes-show',
                                         kwargs={'recipe_id': recipe.id}))
 
+
 @postmethod
 @login_required
 def delete_comment(request, comment_id):
@@ -631,6 +655,7 @@ def delete_comment(request, comment_id):
     comment.delete()
     return HttpResponse(json, mimetype='application/json')
 
+
 @postmethod
 @login_required
 def approve_comment(request, comment_id):
@@ -652,6 +677,7 @@ def approve_comment(request, comment_id):
     json = serializers.serialize('json', [comment])
     return HttpResponse(json, mimetype='application/json')
 
+
 def search_recipes(request, query=None, page=1):
     '''
     レシピを検索します。
@@ -667,7 +693,8 @@ def search_recipes(request, query=None, page=1):
     queries = query.split()
     recipes = Recipe.objects.search(queries, page=page, per_page=per_page)
     page_obj = Paginator(recipes.get('object_list'), per_page).page(page)
-    links = [{'name': u'全体から検索', 'url': reverse('gp-search', kwargs={'query': query})}]
+    links = [{'name': u'全体から検索',
+        'url': reverse('gp-search', kwargs={'query': query})}]
     return render_to_response('recipes/recipes.html',
             {'page_obj': page_obj,
              'title': title,

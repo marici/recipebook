@@ -1,5 +1,5 @@
-# coding: utf-8
-"""
+# -*- coding: utf-8 -*-
+'''
 The MIT License
 
 Copyright (c) 2009 Marici, Inc.
@@ -21,12 +21,13 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-"""
+'''
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 import models
+
 
 class IngredientCategoryAdmin(admin.ModelAdmin):
     pass
@@ -61,23 +62,23 @@ admin.site.register(models.FarmProducer, FarmProducerAdmin)
 class ContestAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            "fields":("name", "dish", "feeling", "ingredients", "description",
-                      "image", "producer", "published_at", "closed_at", 
-                      "finished_at")
+            'fields': ('name', 'dish', 'feeling', 'ingredients', 'description',
+                      'image', 'producer', 'published_at', 'closed_at',
+                      'finished_at')
         }),
-        (u"審査", {
-            "classes": ("collapse",),
-            "fields":("is_reviewing", "is_finished", "comment", 
-                      "reviewing_photo1", "reviewing_photo2", 
-                      "reviewing_photo3", "reviewing_photo4", 
-                      "reviewing_photo5", ),
-            "description": u"以下の項目は締め切り日を過ぎていなければ変更できません。"
+        (u'審査', {
+            'classes': ('collapse',),
+            'fields': ('is_reviewing', 'is_finished', 'comment',
+                      'reviewing_photo1', 'reviewing_photo2',
+                      'reviewing_photo3', 'reviewing_photo4',
+                      'reviewing_photo5', ),
+            'description': u'以下の項目は締め切り日を過ぎていなければ変更できません。'
         }),
     )
-    list_display = ("name", "created_at", "published_at", "closed_at", 
-                    "finished_at", "is_reviewing", "is_finished")
-    date_hierarchy = "published_at"
-    
+    list_display = ('name', 'created_at', 'published_at', 'closed_at',
+                    'finished_at', 'is_reviewing', 'is_finished')
+    date_hierarchy = 'published_at'
+
     def save_model(self, request, obj, form, change):
         self.validate_flags(obj)
         if change:
@@ -95,25 +96,28 @@ class ContestAdmin(admin.ModelAdmin):
                 obj.is_reviewing = False
                 self.stop_reviewing_mode(obj)
         obj.save()
-    
+
     def validate_flags(self, obj):
         if datetime.now() < obj.closed_at:
             obj.is_reviewing = False
             obj.is_finished = False
             obj.comment = None
-            
+
     def start_reviewing_mode(self, obj):
-        status = models.ReviewedContest.objects.create(contest=obj, name=obj.name)
-        models.Recipe.objects.filter(contest=obj.id).update(reviewed_contest=status)
-        
+        status = models.ReviewedContest.objects.create(contest=obj,
+                name=obj.name)
+        models.Recipe.objects.filter(contest=obj.id)\
+                .update(reviewed_contest=status)
+
     def stop_reviewing_mode(self, obj):
         try:
             status = models.ReviewedContest.objects.get(contest=obj.id)
-            models.Recipe.objects.filter(reviewed_contest=status.id).update(reviewed_contest=None)
+            models.Recipe.objects.filter(reviewed_contest=status.id)\
+                    .update(reviewed_contest=None)
             status.delete()
         except ObjectDoesNotExist:
             pass
-        
+
 admin.site.register(models.Contest, ContestAdmin)
 
 
@@ -121,21 +125,21 @@ class ReviewedContestAdmin(admin.ModelAdmin):
     pass
 admin.site.register(models.ReviewedContest, ReviewedContestAdmin)
 
-    
+
 class RecipeAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            "fields":("is_awarded",)
+            'fields': ('is_awarded',)
         }),
     )
-    list_display = ("name", "user", "introduction", "contest", "created_at", 
-                    "score", "is_awarded", "page_URL")
-    list_filter = ("reviewed_contest", "created_at")
-    
+    list_display = ('name', 'user', 'introduction', 'contest', 'created_at',
+                    'score', 'is_awarded', 'page_URL')
+    list_filter = ('reviewed_contest', 'created_at')
+
 admin.site.register(models.Recipe, RecipeAdmin)
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ("__unicode__", "is_female", "birth_year", "prefecture", 
-                    "validation_key")
+    list_display = ('__unicode__', 'is_female', 'birth_year', 'prefecture',
+                    'validation_key')
 admin.site.register(models.UserProfile, UserProfileAdmin)

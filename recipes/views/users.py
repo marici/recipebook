@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 '''
 The MIT License
 
@@ -37,7 +37,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.sites.models import Site
-from recipebook.maricilib.django.shortcuts import get_object, render_to_response_of_class
+from recipebook.maricilib.django.shortcuts import (get_object,
+        render_to_response_of_class)
 from recipebook.maricilib.django.decorators import getmethod, postmethod
 from recipebook.maricilib.django.core.paginator import Paginator
 from recipebook.maricilib.django.apps.taskqueue.queue import get_taskqueue
@@ -49,9 +50,11 @@ recipes_per_page = 20
 users_per_page = 30
 comments_per_page = 20
 
+
 def user_is_active_or_404(user):
     if not user.is_active:
         raise Http404
+
 
 def get_profile_or_create(user):
     '''
@@ -62,6 +65,7 @@ def get_profile_or_create(user):
     except ObjectDoesNotExist, e:
         profile = UserProfile.objects.create(user=user)
     return profile
+
 
 def send_email(template_path, context, subject, to_list):
     '''
@@ -74,6 +78,7 @@ def send_email(template_path, context, subject, to_list):
                               to_list=to_list))
     get_taskqueue().send_task(task, queue_name=settings.QUEUENAME_EMAIL)
 
+
 def target_is_favorite(user, target):
     '''
     userに指定されたユーザがtargetに指定されたユーザをフェイバリットに登録していれば
@@ -82,6 +87,7 @@ def target_is_favorite(user, target):
     if not user.is_authenticated(): return False
     fav = get_object(FavoriteUser, user=user, target=target)
     return fav is not None
+
 
 @getmethod
 def new(request):
@@ -94,6 +100,7 @@ def new(request):
     userform = forms.UserCreationForm()
     return render_to_response('registration/new_form.html',
             {'form': userform}, RequestContext(request))
+
 
 @postmethod
 def new(request):
@@ -126,12 +133,13 @@ def new(request):
     user.is_active = False
     user.save()
     profile = UserProfile.objects.create_pending_user(user=user,
-                                                      alter_email=user.email,
-                                                      **(form.get_profile_dict()))
+            alter_email=user.email,
+            **(form.get_profile_dict()))
     email_validation_url(request, user, profile)
     d = {'created_user': user, 'profile': profile}
     return render_to_response('registration/new_sent_email.html',
             d, RequestContext(request))
+
 
 def email_validation_url(request, user, profile):
     '''
@@ -145,6 +153,7 @@ def email_validation_url(request, user, profile):
                  'validation_url': validation_url})
     subject = u'[%s] メンバー登録確認メール' % site.name
     send_email('recipes/email/validation.txt', c, subject, [user.email])
+
 
 def validate(request, key=None):
     '''
@@ -172,6 +181,7 @@ def validate(request, key=None):
     return render_to_response('registration/new_success.html',
         d, RequestContext(request))
 
+
 @getmethod
 @login_required
 def inactivate(request):
@@ -182,6 +192,7 @@ def inactivate(request):
     '''
     return render_to_response('registration/inactivate_confirm.html',
             {}, RequestContext(request))
+
 
 @postmethod
 @login_required
@@ -197,6 +208,7 @@ def inactivate(request):
     auth.logout(request)
     return render_to_response('registration/inactivate_done.html',
             {}, RequestContext(request))
+
 
 def show(request, user_id=None):
     '''
@@ -215,9 +227,11 @@ def show(request, user_id=None):
     u_and_p = zip_profile(favorite_users, favorite_users.values('pk').query)
     d = {'homeuser': user, 'profile': profile, 'is_favorite': is_favorite,
          'popular_recipes': popular_recipes, 'recent_recipes': recent_recipes,
-         'favorite_recipes': favorite_recipes, 'favorite_user_profiles': u_and_p}
+         'favorite_recipes': favorite_recipes,
+         'favorite_user_profiles': u_and_p}
     return render_to_response('recipes/user.html',
             d, RequestContext(request))
+
 
 @login_required
 def show_home(request):
@@ -228,9 +242,11 @@ def show_home(request):
     '''
     user = request.user
     profile = get_profile_or_create(user)
-    recent_recipes = Recipe.objects.get_recent_recipes(user, allow_draft=True)[: 10]
+    recent_recipes = Recipe.objects.get_recent_recipes(user,
+            allow_draft=True)[:10]
     comments = Comment.objects.get_owner_comments(user)[: 5]
-    fav_user_actions = FavoriteUser.objects.get_favorite_user_actions(user)[: 10]
+    fav_user_actions = FavoriteUser.objects.get_favorite_user_actions(
+            user)[:10]
     d = {'profile': profile,
          'recent_recipes': recent_recipes,
          'comments': comments,
@@ -240,6 +256,7 @@ def show_home(request):
     return render_to_response('recipes/home.html',
             d, RequestContext(request))
 
+
 def get_user_links(user):
     '''
     ユーザページへのリンクを表す辞書のリストを返します。 (この関数はビュー関数ではありません)
@@ -247,6 +264,7 @@ def get_user_links(user):
     return [{'url': reverse('recipes-users-show',
                             kwargs={'user_id': user.id}),
               'name': u'%s さん' % user.first_name}]
+
 
 def show_recipe_list(request, user_id=None, page=1):
     '''
@@ -267,6 +285,7 @@ def show_recipe_list(request, user_id=None, page=1):
             'page_obj': page_obj, 'links': get_user_links(user)},
             RequestContext(request))
 
+
 @getmethod
 @login_required
 def edit_profile(request):
@@ -278,12 +297,13 @@ def edit_profile(request):
     user = request.user
     profile = get_profile_or_create(user)
     profile_form = forms.UserProfileForm(instance=profile,
-                                         initial={'prefecture': profile.prefecture,
-                                               'first_name': user.first_name,
-                                               'last_name': user.last_name})
+            initial={'prefecture': profile.prefecture,
+            'first_name': user.first_name,
+            'last_name': user.last_name})
     d = {'profile': profile, 'profile_form': profile_form}
     return render_to_response('recipes/user_setting_form.html',
                               d, RequestContext(request))
+
 
 @postmethod
 @login_required
@@ -309,6 +329,7 @@ def edit_profile(request):
         user.save()
     messages.add_message(request, messages.INFO, u'設定を変更しました')
     return HttpResponseRedirect(reverse('recipes-users-edit-profile'))
+
 
 @postmethod
 @login_required
@@ -339,9 +360,12 @@ def add_favorite_user(request, user_id=None):
         data = serializers.serialize('json', [fav])
         return HttpResponse(data, mimetype='application/javascript')
     else:
-        message = u'申し訳ありません。フェイバリットメンバーにできるのは%s人までです。' % FavoriteUser.objects.limit
+        message = (u'申し訳ありません。'
+            u'フェイバリットメンバーにできるのは%s人までです。')\
+            % FavoriteUser.objects.limit
         request.user.message_set.create(message=message)
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
+
 
 @postmethod
 @login_required
@@ -368,6 +392,7 @@ def remove_favorite_user(request, user_id=None):
         raise Http404
     return HttpResponse(data, mimetype='application/javascript')
 
+
 def show_favorite_recipes(request, user_id=None, page=1):
     '''
     指定されたユーザのフェイバリットレシピを一覧表示します。
@@ -391,6 +416,7 @@ def show_favorite_recipes(request, user_id=None, page=1):
     return render_to_response('recipes/recipes.html',
             d, RequestContext(request))
 
+
 def show_favorite_users(request, user_id=None, page=1):
     '''
     指定されたユーザのフェイバリットメンバーを一覧表示します。
@@ -403,7 +429,8 @@ def show_favorite_users(request, user_id=None, page=1):
     '''
     user = get_object_or_404(User, pk=user_id)
     user_is_active_or_404(user)
-    fav_user_ids = FavoriteUser.objects.filter(user=user).values('target_id').query
+    fav_user_ids = FavoriteUser.objects.filter(user=user).values(
+            'target_id').query
     fav_users = User.objects.filter(pk__in=fav_user_ids)
     u_and_p = zip_profile(fav_users, fav_users.values('pk').query)
     links = get_user_links(user)
@@ -415,6 +442,7 @@ def show_favorite_users(request, user_id=None, page=1):
     return render_to_response('recipes/favorite_users.html',
             d, RequestContext(request))
 
+
 @login_required
 def show_owner_comments(request, only_not_moderated=False, page=1):
     '''
@@ -424,7 +452,7 @@ def show_owner_comments(request, only_not_moderated=False, page=1):
     @param page: 表示ページ
     @return: 302レスポンス (ログインしていない場合。ログインページへ。)
     '''
-    page = page or 1 # Noneが渡ることがあるため
+    page = page or 1  # Noneが渡ることがあるため
     qs = Comment.objects.filter(owner=request.user)
     if only_not_moderated:
         qs = qs.filter(is_moderated=False)
@@ -433,6 +461,7 @@ def show_owner_comments(request, only_not_moderated=False, page=1):
     d = {'only_not_moderated': only_not_moderated, 'page_obj': page_obj}
     return render_to_response('recipes/comments.html',
             d, RequestContext(request))
+
 
 @login_required
 @getmethod
@@ -443,6 +472,7 @@ def change_email(request):
     '''
     return render_change_email_form(request, forms.EmailChangeForm())
 
+
 def render_change_email_form(request, form):
     d = {'form': form,
          'title': u'メールアドレスの変更',
@@ -451,6 +481,7 @@ def render_change_email_form(request, form):
          'submit_text': u'変更'}
     return render_to_response('base_form.html',
                               d, RequestContext(request))
+
 
 @login_required
 @postmethod
@@ -479,6 +510,7 @@ def change_email(request):
     else:
         return render_change_email_form(request, form)
 
+
 def email_change_email(request, user, profile):
     '''
     メールをタスクに登録します。 (この関数はビュー関数ではありません)
@@ -492,6 +524,7 @@ def email_change_email(request, user, profile):
                Context({'user': user, 'validation_url': validation_url}),
                u'[%s] アドレス変更確認メール' % site.name,
                [profile.pending_email])
+
 
 def validate_change_email(request, user_id=None, key=None):
     '''
@@ -517,6 +550,7 @@ def validate_change_email(request, user_id=None, key=None):
     else:
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
 
+
 @getmethod
 def login(request):
     '''
@@ -524,7 +558,9 @@ def login(request):
     '''
     d = {'form': forms.AuthenticationForm(),
         'next': request.REQUEST.get('next', '')}
-    return render_to_response('registration/login.html', d, RequestContext(request))
+    return render_to_response('registration/login.html', d,
+            RequestContext(request))
+
 
 @postmethod
 def login(request):
@@ -547,6 +583,7 @@ def login(request):
     return render_to_response('registration/login.html', {'form': form},
                               RequestContext(request))
 
+
 def show_active_users(request):
     '''
     アクティブメンバーの一覧を表示します。
@@ -560,6 +597,7 @@ def show_active_users(request):
                               {'users_and_profiles': u_and_p},
                               RequestContext(request))
 
+
 def get_active_users_and_profiles():
     '''
     アクティブメンバーの一覧を取得します。
@@ -569,10 +607,12 @@ def get_active_users_and_profiles():
     u_and_p = cache.get('recipes_users_show_active_users')
     if u_and_p is None:
         a_week_ago = datetime.now() - timedelta(weeks=5)
-        users = DailyScore.objects.get_ranked_objects(User, a_week_ago, limit=20)
+        users = DailyScore.objects.get_ranked_objects(User, a_week_ago,
+                limit=20)
         u_and_p = zip_profile(users, users)
         cache.set('recipes_users_show_active_users', u_and_p)
     return u_and_p
+
 
 def zip_profile(users, user_ids):
     '''
@@ -583,5 +623,5 @@ def zip_profile(users, user_ids):
     d = {}
     for profile in list(profiles):
         d[profile.user_id] = profile
-    return [ {'user': user,'profile': d.get(user.id, None)}
-            for user in users ]
+    return [{'user': user, 'profile': d.get(user.id, None)}
+            for user in users]
