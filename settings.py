@@ -1,7 +1,7 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 # Django settings for recipebook project.
 import os
-BASE_PATH = os.path.abspath(os.path.split(__file__)[0])
+BASE_PATH = os.path.dirname(__file__)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -52,7 +52,7 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: '/home/media/media.lawrence.com/'
-MEDIA_ROOT = '%s/site_media/' % BASE_PATH
+MEDIA_ROOT = os.path.join(BASE_PATH, 'site_media/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -133,7 +133,7 @@ INSTALLED_APPS = (
     'maricilib.django.apps.daily',
     'maricilib.django.apps.taskqueue',
     'maricilib.django.apps.feedback',
-    'recipebook.recipes',
+    'recipes',
 )
 
 # A sample logging configuration. The only tangible logging

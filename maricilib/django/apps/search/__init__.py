@@ -24,7 +24,7 @@ THE SOFTWARE.
 """
 from django.conf import settings
 from django.db.models.signals import post_save, post_delete
-from recipebook.maricilib.search.solrsearch import SolrConnection
+from maricilib.search.solrsearch import SolrConnection
 import models
 
 class BaseModelSearcher(object):

@@ -33,13 +33,14 @@ from django.contrib.auth.decorators import login_required
 from django.utils import simplejson
 from django.contrib import messages
 from django.contrib.sites.models import Site
-from recipebook.maricilib.django.core.paginator import Paginator
-from recipebook.maricilib.django.shortcuts import render_to_response_of_class
-from recipebook.maricilib.django.decorators import getmethod, postmethod
-from recipebook.maricilib.django.apps.taskqueue.queue import get_taskqueue
-from recipebook.maricilib.django.apps.taskqueue.tasks import SendEmailTask
-from recipebook.recipes.models import *
-from recipebook.recipes import forms
+from maricilib.django.core.paginator import Paginator
+from maricilib.django.shortcuts import render_to_response_of_class
+from maricilib.django.decorators import getmethod, postmethod
+from maricilib.django.apps.taskqueue.queue import get_taskqueue
+from maricilib.django.apps.taskqueue.tasks import SendEmailTask
+from recipes.models import (Recipe, Contest, User, UserProfile, Direction,
+        Comment, FavoriteRecipe)
+from recipes import forms
 
 
 def user_is_active_or_404(user):

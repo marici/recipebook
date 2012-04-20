@@ -23,11 +23,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 from django.test import TestCase
-from recipebook.maricilib.taskqueue import TaskQueue, tasks
-from recipebook.maricilib.taskqueue.backends import dummy
-from recipebook.maricilib.django.apps.taskqueue import queue
-from recipebook.maricilib.django.apps.taskqueue.models import DoTaskLog, ErrorLog
-from recipebook.maricilib.django.apps.taskqueue.management.commands import dotask
+from maricilib.taskqueue import TaskQueue, tasks
+from maricilib.taskqueue.backends import dummy
+from maricilib.django.apps.taskqueue import queue
+from maricilib.django.apps.taskqueue.models import DoTaskLog, ErrorLog
+from maricilib.django.apps.taskqueue.management.commands import dotask
 
 class CommandTest(TestCase):
     """

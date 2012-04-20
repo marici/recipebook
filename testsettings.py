@@ -65,11 +65,11 @@ TEMPLATE_LOADERS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.auth',
     'django.core.context_processors.media',
-    'recipebook.maricilib.django.core.context_processors.csrf',
-    'recipebook.maricilib.django.core.context_processors.current_site',
-    'recipebook.maricilib.django.core.context_processors.settings',
-    'recipebook.recipes.context_processors.side1',
-    'recipebook.maricilib.django.apps.feedback.context_processors.form',
+    'maricilib.django.core.context_processors.csrf',
+    'maricilib.django.core.context_processors.current_site',
+    'maricilib.django.core.context_processors.settings',
+    'recipes.context_processors.side1',
+    'maricilib.django.apps.feedback.context_processors.form',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -96,13 +96,13 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.humanize',
-    'recipebook.maricilib.django.apps.sitenews',
-    'recipebook.maricilib.django.apps.documents',
-    'recipebook.maricilib.django.apps.search',
-    'recipebook.maricilib.django.apps.daily',
-    'recipebook.maricilib.django.apps.taskqueue',
-    'recipebook.maricilib.django.apps.feedback',
-    'recipebook.recipes',
+    'maricilib.django.apps.sitenews',
+    'maricilib.django.apps.documents',
+    'maricilib.django.apps.search',
+    'maricilib.django.apps.daily',
+    'maricilib.django.apps.taskqueue',
+    'maricilib.django.apps.feedback',
+    'recipes',
 )
 
 LOGIN_REDIRECT_URL = '/home/'

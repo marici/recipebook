@@ -22,14 +22,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
-from datetime import datetime, timedelta
 from django.conf import settings
 from django.core import serializers
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import (HttpResponse, HttpResponseRedirect, Http404,
- HttpResponseForbidden)
+    HttpResponseForbidden)
 from django.template import loader, Context, RequestContext
 from django.shortcuts import get_object_or_404, render_to_response
 from django.contrib import auth
@@ -37,14 +36,15 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.sites.models import Site
-from recipebook.maricilib.django.shortcuts import (get_object,
-        render_to_response_of_class)
-from recipebook.maricilib.django.decorators import getmethod, postmethod
-from recipebook.maricilib.django.core.paginator import Paginator
-from recipebook.maricilib.django.apps.taskqueue.queue import get_taskqueue
-from recipebook.maricilib.django.apps.taskqueue.tasks import SendEmailTask
-from recipebook.recipes.models import *
-from recipebook.recipes import forms
+from maricilib.django.shortcuts import (get_object,
+    render_to_response_of_class)
+from maricilib.django.decorators import getmethod, postmethod
+from maricilib.django.core.paginator import Paginator
+from maricilib.django.apps.taskqueue.queue import get_taskqueue
+from maricilib.django.apps.taskqueue.tasks import SendEmailTask
+from recipes.models import (UserProfile, FavoriteUser, Recipe, Comment,
+    DailyAction, DailyScore, Karma)
+from recipes import forms
 
 recipes_per_page = 20
 users_per_page = 30
@@ -62,7 +62,7 @@ def get_profile_or_create(user):
     '''
     try:
         profile = user.get_profile()
-    except ObjectDoesNotExist, e:
+    except ObjectDoesNotExist:
         profile = UserProfile.objects.create(user=user)
     return profile
 

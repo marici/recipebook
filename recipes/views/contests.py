@@ -25,18 +25,17 @@ THE SOFTWARE.
 from datetime import datetime
 from django.conf import settings
 from django.core import urlresolvers, serializers
-from django.http import (HttpResponse, Http404, HttpResponseRedirect,
-                         HttpResponseForbidden,)
+from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.template import loader, Context, RequestContext
 from django.shortcuts import get_object_or_404, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
-from recipebook.maricilib.django.decorators import getmethod, postmethod
-from recipebook.maricilib.django.shortcuts import render_to_response_of_class
-from recipebook.maricilib.django.core.paginator import Paginator
-from recipebook.maricilib.django.apps.taskqueue.queue import get_taskqueue
-from recipebook.maricilib.django.apps.taskqueue.tasks import SendEmailTask
-from recipebook.recipes.models import Contest, Recipe
+from maricilib.django.decorators import postmethod
+from maricilib.django.shortcuts import render_to_response_of_class
+from maricilib.django.core.paginator import Paginator
+from maricilib.django.apps.taskqueue.queue import get_taskqueue
+from maricilib.django.apps.taskqueue.tasks import SendEmailTask
+from recipes.models import Contest, Recipe
 
 per_page = 10
 

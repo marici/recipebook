@@ -24,13 +24,11 @@ THE SOFTWARE.
 '''
 
 import random
-from datetime import datetime, timedelta
 from django.core.cache import cache
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.conf import settings
-from recipes.models import *
+from recipes.models import Contest, Recipe
 
 
 def top(request):

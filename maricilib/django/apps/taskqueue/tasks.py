@@ -24,10 +24,10 @@ THE SOFTWARE.
 """
 from django.core.mail import send_mail
 from django.conf import settings
-from recipebook.maricilib import load_class
-from recipebook.maricilib.taskqueue.tasks import Task
-from recipebook.maricilib.django.db.models.base import S3SyncModelBase
-from recipebook.maricilib.django.db.models.fields import S3SyncField
+from maricilib import load_class
+from maricilib.taskqueue.tasks import Task
+from maricilib.django.db.models.base import S3SyncModelBase
+from maricilib.django.db.models.fields import S3SyncField
 
 class SendEmailTask(Task):
     """

@@ -24,7 +24,7 @@ THE SOFTWARE.
 """
 from __future__ import with_statement
 import unicodedata
-from recipebook.maricilib.thirdparty.pysolr import *
+from maricilib.thirdparty.pysolr import *
 
 class SolrConnection(object):
     

@@ -23,8 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 from django.core.management.base import BaseCommand
-from recipebook.maricilib.django.apps.taskqueue.queue import get_taskqueue, default_queue
-from recipebook.maricilib.django.apps.taskqueue.models import DoTaskLog, ErrorLog
+from maricilib.django.apps.taskqueue.queue import get_taskqueue, default_queue
+from maricilib.django.apps.taskqueue.models import DoTaskLog, ErrorLog
 
 from datetime import datetime
 

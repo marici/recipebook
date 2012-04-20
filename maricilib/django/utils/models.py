@@ -1,9 +1,9 @@
 # coding: utf-8
-from recipebook.maricilib.warnings import module_deprecated
-module_deprecated(__name__, "recipebook.maricilib.django.db.models")
+from maricilib.warnings import module_deprecated
+module_deprecated(__name__, "maricilib.django.db.models")
 
 from django.db import models
-from recipebook.maricilib.django.db.models import managers
+from maricilib.django.db.models import managers
 
 class DailyScore(models.Model):
     """

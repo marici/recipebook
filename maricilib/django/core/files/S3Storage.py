@@ -10,7 +10,6 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.base import File
 from django.core.files.storage import Storage
-from django.utils.functional import curry
 
 ACCESS_KEY_NAME = 'AWS_ACCESS_KEY_ID'
 SECRET_KEY_NAME = 'AWS_SECRET_ACCESS_KEY'
@@ -20,10 +19,10 @@ AWS_PORT = 'AWS_PORT'
 AWS_SECURE_PORT = 'AWS_SECURE_PORT'
 
 try:
-    from recipebook.maricilib.thirdparty.amazon import S3
+    from maricilib.thirdparty.amazon import S3
     S3.PORTS_BY_SECURITY = {True:getattr(settings, AWS_SECURE_PORT, 443),
                             False:getattr(settings, AWS_PORT, 80)}
-    from recipebook.maricilib.thirdparty.amazon.S3 import (AWSAuthConnection, 
+    from maricilib.thirdparty.amazon.S3 import (AWSAuthConnection, 
                                                 QueryStringAuthGenerator,
                                                 CallingFormat)
 except ImportError:

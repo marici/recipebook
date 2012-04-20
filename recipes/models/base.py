@@ -26,7 +26,6 @@ import os
 import uuid
 import itertools
 from datetime import datetime, date, timedelta
-from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse

@@ -22,8 +22,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-from recipebook.maricilib.stomp import Stomper
-from recipebook.maricilib.taskqueue.backends.base import BaseQueueOperation
+from maricilib.stomp import Stomper
+from maricilib.taskqueue.backends.base import BaseQueueOperation
 
 class QueueOperation(BaseQueueOperation):
 

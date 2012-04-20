@@ -24,7 +24,7 @@ THE SOFTWARE.
 """
 from django.db.models import signals
 from django.conf import settings
-from recipebook.maricilib.django.apps.taskqueue.queue import get_taskqueue
+from maricilib.django.apps.taskqueue.queue import get_taskqueue
 
 # シグナルレシーバ
 def send_post_save_task(sender, **kwargs):

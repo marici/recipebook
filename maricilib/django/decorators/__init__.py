@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 from django.http import HttpResponseNotAllowed
-from recipebook.maricilib.multimethod import multifunc, ByContentMultiMethod
+from maricilib.multimethod import multifunc, ByContentMultiMethod
 
 class ByDjangoHTTP(ByContentMultiMethod):
     POST = "POST"

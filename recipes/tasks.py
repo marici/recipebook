@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 import os
-from recipebook.maricilib.taskqueue.tasks import Task
+from maricilib.taskqueue.tasks import Task
 from django.utils import simplejson
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.contrib.sites.models import Site
@@ -35,8 +35,8 @@ def send_email(template_path, cdata, subject, to_list):
     '''
     from django.conf import settings
     from django.template import loader, Context
-    from recipebook.maricilib.django.apps.taskqueue.queue import get_taskqueue
-    from recipebook.maricilib.django.apps.taskqueue.tasks import SendEmailTask
+    from maricilib.django.apps.taskqueue.queue import get_taskqueue
+    from maricilib.django.apps.taskqueue.tasks import SendEmailTask
 
     t = loader.get_template(template_path)
     body = t.render(Context(cdata))
@@ -51,8 +51,8 @@ class SubmitRecipeTask(Task):
     def do(self):
         from django.conf import settings
         from django.contrib.auth.models import User
-        from recipebook.recipes.models import Contest, Direction
-        from recipebook.recipes.forms import BackendRecipeForm
+        from recipes.models import Contest, Direction
+        from recipes.forms import BackendRecipeForm
 
         site = Site.objects.get_current()
         user = User.objects.get(pk=self.user_id)

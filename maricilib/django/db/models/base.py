@@ -26,7 +26,7 @@ import copy, logging
 from django.db import models
 import fields
 try:
-    from recipebook.maricilib.django.core.files.storage import S3Storage
+    from maricilib.django.core.files.storage import S3Storage
     s3_storage = S3Storage()
 except Exception, e:
     logging.warn("S3Storage is not available. %s" % e)
@@ -36,7 +36,7 @@ class S3SyncModelBase(models.base.ModelBase):
     """
     Djangoモデルクラスの定義に含まれるファイルフィールドインスタンスを複製し、
     Amazon S3格納用のフィールドを追加定義するメタクラス。
-    複製の対象となるのは、recipebook.maricilib.django.db.fields.S3Sync*Fieldのインスタンスである。
+    複製の対象となるのは、maricilib.django.db.fields.S3Sync*Fieldのインスタンスである。
     モデルクラスには以下のフィールドが追加される。
 
      * [fieldname]_s3 - ストレージをS3としたファイルおよび画像フィールド
@@ -44,7 +44,7 @@ class S3SyncModelBase(models.base.ModelBase):
 
     [fieldname]_s3の定義はオリジナルのフィールドをコピーするが、以下の点が異なる。
 
-     * storage: recipebook.maricilib.django.core.files.storage.S3Storageインスタンス
+     * storage: maricilib.django.core.files.storage.S3Storageインスタンス
      * blank: True
      * null: True
      * editable: False

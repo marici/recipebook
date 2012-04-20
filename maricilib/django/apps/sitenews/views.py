@@ -26,8 +26,8 @@ from datetime import datetime
 from django.http import Http404
 from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render_to_response
-from recipebook.maricilib.django.core.paginator import Paginator
-from recipebook.maricilib.django.apps.sitenews.models import SiteNews
+from maricilib.django.core.paginator import Paginator
+from maricilib.django.apps.sitenews.models import SiteNews
 
 per_page = 20
 

@@ -24,8 +24,8 @@ THE SOFTWARE.
 '''
 from datetime import datetime, timedelta
 from django.core.cache import cache
-from recipebook.recipes.models import Contest, UserProfile, Recipe
-from recipebook.recipes.views import users as users_view
+from recipes.models import Contest, UserProfile
+from recipes.views import users as users_view
 
 
 def side1(request):

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
-from recipebook.recipes import forms
-from recipebook.recipes import models
+from recipes import forms
+from recipes import models
 
-urlpatterns = patterns('recipebook.recipes.views',
+urlpatterns = patterns('recipes.views',
     url(r'^recipe/register/$', 'register_recipe',
         name='recipes-register'),
     url(r'^recipe/register/(?P<contest_id>\d+)/$', 'register_recipe',

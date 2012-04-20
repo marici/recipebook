@@ -22,9 +22,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-from recipebook.maricilib import load_class
-from recipebook.maricilib.taskqueue import backends
-from recipebook.maricilib.taskqueue.backends import base as backbase
+from maricilib import load_class
+from maricilib.taskqueue import backends
+from maricilib.taskqueue.backends import base as backbase
 from tasks import Task
 
 default_queue = "default"

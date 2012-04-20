@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import url, patterns, include
 from django.conf import settings
 import views as topviews
 
@@ -10,15 +10,15 @@ urlpatterns = patterns('',
     url(r'^searchform/$', topviews.show_search_form, name='gp-search-form'),
     url(r'^search/$', topviews.search, name='gp-search-noarg'),
     url(r'^search/(?P<query>[^/]*)/$', topviews.search, name='gp-search'),
-    url(r'^members/$', 'recipebook.recipes.views.users.show_active_users',
+    url(r'^members/$', 'recipes.views.users.show_active_users',
         name='active-users'),
 
-    url(r'', include('recipebook.recipes.urls')),
+    url(r'', include('recipes.urls')),
 
-    url(r'^news/', include('recipebook.maricilib.django.apps.sitenews.urls')),
-    url(r'^doc/', include('recipebook.maricilib.django.apps.documents.urls')),
+    url(r'^news/', include('maricilib.django.apps.sitenews.urls')),
+    url(r'^doc/', include('maricilib.django.apps.documents.urls')),
     url(r'^feedback/',
-        include('recipebook.maricilib.django.apps.feedback.urls')),
+        include('maricilib.django.apps.feedback.urls')),
     url(r'^accounts/', include('django.contrib.auth.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),

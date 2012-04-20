@@ -22,8 +22,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-from recipebook.maricilib.warnings import module_deprecated
-module_deprecated(__name__, "recipebook.maricilib.django.core.paginator")
+from maricilib.warnings import module_deprecated
+module_deprecated(__name__, "maricilib.django.core.paginator")
 
 from django.core.paginator import Paginator as BasePaginator
 from django.core.paginator import Page as BasePage

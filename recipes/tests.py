@@ -24,7 +24,6 @@ THE SOFTWARE.
 '''
 from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django.test.client import Client
 from models import *
 from recipes import forms
 
@@ -184,7 +183,7 @@ class RecipesViewsTest(TestCase):
         response = self.client.get(path)
         self.assertEqual(response.status_code, 200)
 
-    def test_show_recipe_awarded(self):
+    def test_show_recipe_awarded2(self):
         '''
         url: recipes-show
         受賞していて、結果が発表されていればマークを表示
@@ -363,7 +362,6 @@ class RecipesViewsTest(TestCase):
         data1 = {
             'recipe_id': 1,
         }
-        original = Recipe.objects.get(pk=data1['recipe_id'])
         path = reverse('recipes-copy',
                 kwargs={'recipe_id': data1['recipe_id']})
         self.client.login(**user1)
@@ -519,8 +517,6 @@ class RecipesViewsTest(TestCase):
         self.client.login(**user1)
         response = self.client.post(path)
         self.assertEquals(recipe.user.username, user1['username'])
-        edit_page_url = reverse('recipes-edit',
-                kwargs={'recipe_id': recipe_id})
         self.assertEquals(response.status_code, 403)
 
     def test_edit_recipe_get_nologin(self):
@@ -1093,13 +1089,13 @@ class RecipesViewsTest(TestCase):
         path = reverse('recipes-comment-add', kwargs={'recipe_id': 1})
         self.client.login(**user2)
         response = self.client.post(path, post_data)
-        comment = Comment.objects.get(text=post_data['text'])
+        Comment.objects.get(text=post_data['text'])
         path = reverse('recipes-comment-delete', kwargs={'comment_id': 10000})
         self.client.login(**user1)
         response = self.client.post(path)
         self.assertEquals(response.status_code, 404)
         try:
-            comment = Comment.objects.get(text=post_data['text'])
+            Comment.objects.get(text=post_data['text'])
         except Comment.DoesNotExist:
             self.fail('comment was deleted.')
 
@@ -1170,7 +1166,7 @@ class RecipesViewsTest(TestCase):
         path = reverse('recipes-comment-add', kwargs={'recipe_id': 1})
         self.client.login(**user2)
         response = self.client.post(path, post_data)
-        comment = Comment.objects.get(text=post_data['text'])
+        Comment.objects.get(text=post_data['text'])
         path = reverse('recipes-comment-approve', kwargs={'comment_id': 10000})
         self.client.login(**user1)
         response = self.client.post(path)
@@ -1531,7 +1527,7 @@ class UsersViewsTest(TestCase):
         response = self.client.post(path, post_data)
         self.assertEqual(response.status_code, 200)
         user = response.context[0]['created_user']
-        profile = user.get_profile()
+        user.get_profile()
         path = reverse('recipes-users-validate',
                        kwargs={'key': 'invalid_key'})
         response = self.client.get(path)

@@ -22,11 +22,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-from recipebook.maricilib.warnings import module_deprecated
-module_deprecated(__name__, "recipebook.maricilib.django.db.models.managers")
+from maricilib.warnings import module_deprecated
+module_deprecated(__name__, "maricilib.django.db.models.managers")
 
 from datetime import date, datetime
-from dateutil.relativedelta import relativedelta
 from django.db import models
 
 class DailyScoreManager(models.Manager):

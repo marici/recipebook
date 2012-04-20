@@ -24,7 +24,7 @@ THE SOFTWARE.
 """
 from datetime import datetime
 from django import template
-from recipebook.maricilib.django.apps.sitenews.models import SiteNews
+from maricilib.django.apps.sitenews.models import SiteNews
 
 register = template.Library()
 

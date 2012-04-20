@@ -23,7 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 import models

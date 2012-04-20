@@ -1,6 +1,6 @@
 # coding: utf-8
-from recipebook.maricilib.warnings import module_deprecated
-module_deprecated(__name__, "recipebook.maricilib.django.shortcuts")
+from maricilib.warnings import module_deprecated
+module_deprecated(__name__, "maricilib.django.shortcuts")
 
 from django.template import loader
 from django.db.models.manager import Manager

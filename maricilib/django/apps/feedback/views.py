@@ -27,7 +27,7 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.template import loader, Context
 from django.utils import simplejson
-from recipebook.maricilib.django.apps.feedback import forms
+from maricilib.django.apps.feedback import forms
 
 def submit(request, send_mail_func=send_mail):
     """

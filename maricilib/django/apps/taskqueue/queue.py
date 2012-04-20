@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 from django.conf import settings
-from recipebook.maricilib.taskqueue import TaskQueue, default_queue
+from maricilib.taskqueue import TaskQueue
 
 taskqueue = None
 
