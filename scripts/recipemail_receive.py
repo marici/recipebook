@@ -26,9 +26,9 @@ THE SOFTWARE.
 import sys, os, re, unicodedata
 from collections import defaultdict
 from email.parser import Parser
-from recipebook.maricilib.taskqueue import TaskQueue
-from recipebook import mailsettings as settings
-from recipebook.recipes.tasks import SubmitRecipeTask
+from maricilib.taskqueue import TaskQueue
+import mailsettings as settings
+from recipes.tasks import SubmitRecipeTask
 from sendmail import MailSender
 
 BR = re.compile(u'[\r\n]+')
