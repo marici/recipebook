@@ -94,6 +94,6 @@ class DeleteS3Task(Task):
 
     def do(self):
         if not settings.USE_AWS: return
-        from recipebook.maricilib.django.core.files.storage import S3Storage
+        from maricilib.django.core.files.storage import S3Storage
         s3_storage = S3Storage()
         s3_storage.delete(self.name)

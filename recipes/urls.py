@@ -73,7 +73,7 @@ urlpatterns = patterns('recipes.views',
         name='recipes-search-with-page'),
 )
 
-urlpatterns += patterns('recipebook.recipes.views.contests',
+urlpatterns += patterns('recipes.views.contests',
     url(r'^contest/current/$', 'show_current_contest_list',
         name='recipes-contests-current'),
     url(r'^contest/current/(?P<page>\d+)$', 'show_current_contest_list',
@@ -126,7 +126,7 @@ urlpatterns += patterns('',
         {'password_reset_form': forms.PasswordResetForm}),
 )
 
-urlpatterns += patterns('recipebook.recipes.views.users',
+urlpatterns += patterns('recipes.views.users',
     url(r'^accounts/login/', 'login',
         name='recipes-users-login'),
     url(r'^accounts/new/', 'new',
