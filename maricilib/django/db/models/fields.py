@@ -114,3 +114,11 @@ class S3SyncImageField(S3SyncField, ImageField):
 
 class S3SyncResizedImageField(S3SyncField, ResizedImageField):
     pass
+
+
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([],
+            ['^maricilib\.django\.db\.models\.fields'])
+except:
+    pass
