@@ -109,7 +109,11 @@ def register_recipe(request, contest_id=None):
     @return: 302レスポンス (ログインしていない場合)
     @return: 200レスポンス (成功。フォームを表示)
     '''
-    form = forms.NewRecipeForm()
+    if contest_id:
+        contest = get_object_or_404(Contest, pk=contest_id)
+        form = contest.recipe_form(request.user)
+    else:
+        form = forms.NewRecipeForm()
     d = {'form': form}
     return render_to_response('recipes/new_recipe_form.html',
         d, RequestContext(request))
@@ -143,7 +147,13 @@ def register_recipe(request, contest_id=None):
     recipe = form.save(commit=False)
     recipe.user = request.user
     if contest_id:
-        recipe.contest = Contest.objects.get(pk=contest_id)
+        contest = Contest.objects.get(pk=contest_id)
+        try:
+            contest.pre_submit_recipe(request.user, recipe)
+        except Contest.NotAllowedSubmit:
+            pass
+        else:
+            recipe.contest = contest
     recipe.save()
     return HttpResponseRedirect(reverse('recipes-edit',
                                         kwargs={'recipe_id': recipe.id}))

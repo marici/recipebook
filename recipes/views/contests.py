@@ -90,15 +90,11 @@ def show_contest(request, contest_id=None):
     @return: 200レスポンス (成功)
     '''
     contest = get_object_or_404(Contest, pk=contest_id)
-    if not contest.is_published():
+    d = {'contest': contest}
+    try:
+        contest.pre_view(request.user, d)
+    except Contest.NotAllowedShow:
         raise Http404
-    contests = Contest.objects.get_current_contests()
-    d = {'contest': contest,
-         'contests': contests}
-    if contest.is_really_finished():
-        award_recipes = contest.get_awarded_recipes()
-        d['top_award_recipes'] = award_recipes[:2]
-        d['award_recipes'] = award_recipes[2:]
     return render_to_response('recipes/contest.html',
             d, RequestContext(request))
 
@@ -148,10 +144,13 @@ def submit_recipe(request, contest_id=None, recipe_id=None):
     '''
     contest = get_object_or_404(Contest, pk=contest_id)
     recipe = get_object_or_404(Recipe, pk=recipe_id)
-    if recipe.user != request.user or recipe.contest:
+    try:
+        contest.pre_submit_recipe(request.user, recipe)
+    except Contest.NotAllowedSubmit:
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
     recipe.contest = contest
     recipe.save()
+    contest.post_submit_recipe(request.user, recipe)
     data = serializers.serialize('json', [recipe])
     return HttpResponse(data, mimetype='application/javascript')
 

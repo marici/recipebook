@@ -33,6 +33,9 @@ class Contest(models.Model):
         app_label = 'recipes'
         verbose_name = verbose_name_plural = u'お題'
 
+    class NotAllowedShow(Exception): pass
+    class NotAllowedSubmit(Exception): pass
+
     objects = managers.ContestManager()
 
     name = models.CharField(max_length=50,
@@ -74,6 +77,22 @@ class Contest(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def pre_view(self, user, ctxd={}, extra=None):
+        if not self.is_published():
+            raise self.NotAllowedShow()
+        ctxd['contests'] = Contest.objects.get_current_contests()
+        if self.is_really_finished():
+            award_recipes = self.get_awarded_recipes()
+            ctxd['top_award_recipes'] = award_recipes[:2]
+            ctxd['award_recipes'] = award_recipes[2:]
+
+    def pre_submit_recipe(self, user, recipe):
+        if recipe.user != request.user or recipe.contest:
+            raise self.NotAllowedSubmit()
+
+    def post_submit_recipe(self, user, recipe):
+        pass
 
     def is_published(self):
         return self.published_at <= datetime.now()
