@@ -14,6 +14,12 @@ USE_I18N = True
 MEDIA_ROOT = os.path.join(BASE_PATH, 'site_media/')
 MEDIA_URL = '/site_media/'
 ADMIN_MEDIA_PREFIX = '/media/'
+STATIC_URL = '/site_media/'
+STATICFILES_DIRS = ()
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
 SECRET_KEY = 'YOUR_SECRET_KEY'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
