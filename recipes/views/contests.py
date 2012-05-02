@@ -31,7 +31,8 @@ from django.shortcuts import get_object_or_404, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
 from maricilib.django.decorators import postmethod
-from maricilib.django.shortcuts import render_to_response_of_class
+from maricilib.django.shortcuts import (render_to_response_of_class,
+        render_to_response_device)
 from maricilib.django.core.paginator import Paginator
 from maricilib.django.apps.taskqueue.queue import get_taskqueue
 from maricilib.django.apps.taskqueue.tasks import SendEmailTask
@@ -78,7 +79,8 @@ def show_closed_contest_list(request, page=1):
             d, RequestContext(request))
 
 
-def show_contest(request, contest_id=None):
+def show_contest(request, contest_id=None, model=Contest,
+        template_name='recipes/contest.html'):
     '''
     お題の詳細を表示します。
     is_publishedが現在時刻より小さいお題は表示できません。
@@ -89,13 +91,13 @@ def show_contest(request, contest_id=None):
     @return: 404レスポンス (お題が存在しないか、published_atが未来の場合)
     @return: 200レスポンス (成功)
     '''
-    contest = get_object_or_404(Contest, pk=contest_id)
+    contest = get_object_or_404(model, pk=contest_id)
     d = {'contest': contest}
     try:
         contest.pre_view(request.user, d)
-    except Contest.NotAllowedShow:
+    except model.NotAllowedShow:
         raise Http404
-    return render_to_response('recipes/contest.html',
+    return render_to_response_device(request, template_name,
             d, RequestContext(request))
 
 

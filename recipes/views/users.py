@@ -37,7 +37,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.sites.models import Site
 from maricilib.django.shortcuts import (get_object,
-    render_to_response_of_class)
+    render_to_response_of_class, render_to_response_device)
 from maricilib.django.decorators import getmethod, postmethod
 from maricilib.django.core.paginator import Paginator
 from maricilib.django.apps.taskqueue.queue import get_taskqueue
@@ -98,7 +98,7 @@ def new(request):
     @return: 200レスポンス (成功。フォームを表示)
     '''
     userform = forms.UserCreationForm()
-    return render_to_response('registration/new_form.html',
+    return render_to_response_device(request, 'registration/new_form.html',
             {'form': userform}, RequestContext(request))
 
 
@@ -127,7 +127,7 @@ def new(request):
     '''
     form = forms.UserCreationForm(request.POST)
     if not form.is_valid():
-        return render_to_response('registration/new_form.html',
+        return render_to_response_device(request, 'registration/new_form.html',
             {'form': form}, RequestContext(request))
     user = form.save(commit=False)
     user.is_active = False
@@ -137,8 +137,8 @@ def new(request):
             **(form.get_profile_dict()))
     email_validation_url(request, user, profile)
     d = {'created_user': user, 'profile': profile}
-    return render_to_response('registration/new_sent_email.html',
-            d, RequestContext(request))
+    return render_to_response_device(request,
+            'registration/new_sent_email.html', d, RequestContext(request))
 
 
 def email_validation_url(request, user, profile):
@@ -178,7 +178,7 @@ def validate(request, key=None):
     user.is_active = True
     user.save()
     d = {'created_user': user, 'profile': profile}
-    return render_to_response('registration/new_success.html',
+    return render_to_response_device(request, 'registration/new_success.html',
         d, RequestContext(request))
 
 
