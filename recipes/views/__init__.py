@@ -109,11 +109,11 @@ def register_recipe(request, contest_id=None):
     @return: 302レスポンス (ログインしていない場合)
     @return: 200レスポンス (成功。フォームを表示)
     '''
+    form = forms.NewRecipeForm()
     if contest_id:
         contest = get_object_or_404(Contest, pk=contest_id)
-        form = contest.recipe_form(request.user)
-    else:
-        form = forms.NewRecipeForm()
+        if hasattr(contest, 'recipe_form'):
+            form = contest.recipe_form(request.user)
     d = {'form': form}
     return render_to_response('recipes/new_recipe_form.html',
         d, RequestContext(request))

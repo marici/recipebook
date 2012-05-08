@@ -88,7 +88,7 @@ class Contest(models.Model):
             ctxd['award_recipes'] = award_recipes[2:]
 
     def pre_submit_recipe(self, user, recipe):
-        if recipe.user != request.user or recipe.contest:
+        if recipe.user != user or recipe.contest:
             raise self.NotAllowedSubmit()
 
     def post_submit_recipe(self, user, recipe):
