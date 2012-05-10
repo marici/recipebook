@@ -75,7 +75,7 @@
             {% for recipe in award_recipes %}
                 <dl class="dl03">
                 <dt><a href="{% url recipes-show recipe_id=recipe.id %}">{{ recipe.name }}</a></dt>
-                <dd class="dd01"><a href="{% url recipes-show recipe_id=recipe.id %}"><img src="{{ recipe.photo|thumbnail:"99x99" }}" alt="{{ recipe.name }}" /></a></dd>
+                <dd class="dd01"><a href="{% url recipes-show recipe_id=recipe.id %}">{% if recipe.photo %}<img src="{{ recipe.photo|thumbnail:"99x99" }}" alt="{{ recipe.name }}" />{% endif %}</a></dd>
                 <dd class="dd03">by <a href="{% url recipes-users-show user_id=recipe.user_id %}">{{ recipe.user.first_name }}</a> さん</dd>
                 <dd class="dd04">{{ recipe.introduction|abbr:80 }}</dd>
                 <!-- /dl03 --></dl>
