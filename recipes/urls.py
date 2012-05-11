@@ -122,8 +122,7 @@ urlpatterns += patterns('django.views.generic',
 
 urlpatterns += patterns('',
     url(r'^accounts/password_reset/$',
-        'django.contrib.auth.views.password_reset',
-        {'password_reset_form': forms.PasswordResetForm}),
+        'django.contrib.auth.views.password_reset')
 )
 
 urlpatterns += patterns('recipes.views.users',
