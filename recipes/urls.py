@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
-from recipes import forms
 from recipes import models
 
 urlpatterns = patterns('recipes.views',
@@ -125,8 +124,7 @@ urlpatterns += patterns('',
         'django.contrib.auth.views.password_reset'),
     url(r'^accounts/password_reset/iphone$',
         'django.contrib.auth.views.password_reset',
-        {'password_reset_form': forms.PasswordResetForm,
-         'template_name': 'registration/password_reset_form-iphone.html',
+        {'template_name': 'registration/password_reset_form-iphone.html',
          'post_reset_redirect': 'accounts/password_reset_done/iphone'}
     ),
     url(r'^accounts/password_reset_done/iphone$',
