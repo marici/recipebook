@@ -124,6 +124,16 @@ urlpatterns += patterns('',
     url(r'^accounts/password_reset/$',
         'django.contrib.auth.views.password_reset',
         {'password_reset_form': forms.PasswordResetForm}),
+    url(r'^accounts/password_reset/iphone$',
+        'django.contrib.auth.views.password_reset',
+        {'password_reset_form': forms.PasswordResetForm,
+         'template_name': 'registration/password_reset_form-iphone.html',
+         'post_reset_redirect': 'accounts/password_reset_done/iphone'}
+    ),
+    url(r'^accounts/password_reset_done/iphone$',
+        'django.contrib.auth.views.password_reset_done',
+        {'template_name': 'registration/password_reset_done-iphone.html'}
+    )
 )
 
 urlpatterns += patterns('recipes.views.users',
