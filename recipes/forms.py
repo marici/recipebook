@@ -23,17 +23,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 '''
 from django import forms
-from django.conf import settings
-from django.utils.http import int_to_base36
-from django.template import loader, Context
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from django.contrib.auth import forms as auth_forms
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.sites.models import Site
 from django.contrib.localflavor.jp.jp_prefectures import JP_PREFECTURES
-from maricilib.django.apps.taskqueue.queue import get_taskqueue
-from maricilib.django.apps.taskqueue.tasks import SendEmailTask
 import models
 
 GENDER_CHOICES = (('female', '女'), ('male', u'男'))
