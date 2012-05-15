@@ -34,7 +34,8 @@ from django.utils import simplejson
 from django.contrib import messages
 from django.contrib.sites.models import Site
 from maricilib.django.core.paginator import Paginator
-from maricilib.django.shortcuts import render_to_response_of_class
+from maricilib.django.shortcuts import (render_to_response_of_class,
+        render_to_response_device)
 from maricilib.django.decorators import getmethod, postmethod
 from maricilib.django.apps.taskqueue.queue import get_taskqueue
 from maricilib.django.apps.taskqueue.tasks import SendEmailTask
@@ -48,7 +49,7 @@ def user_is_active_or_404(user):
         raise Http404
 
 
-def show_recipe(request, recipe_id=None):
+def show_recipe(request, recipe_id=None, template_name='recipes/recipe.html'):
     '''
     指定されたIDのレシピ詳細ページを出力します。
     レシピがis_draft == Trueの場合、作成したユーザのみ見ることができます。
@@ -77,8 +78,8 @@ def show_recipe(request, recipe_id=None):
     submit_form = forms.SubmitToContestForm()
     d = {'recipe': recipe, 'comment_form': comment_form,
          'submit_form': submit_form}
-    return render_to_response('recipes/recipe.html',
-        d, RequestContext(request))
+    return render_to_response_device(request, template_name,
+            d, RequestContext(request))
 
 
 @getmethod
