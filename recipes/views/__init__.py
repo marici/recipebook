@@ -49,22 +49,24 @@ def user_is_active_or_404(user):
         raise Http404
 
 
-def show_recipe(request, recipe_id=None, template_name='recipes/recipe.html'):
+def show_recipe(request, recipe_id=None, recipe_model=Recipe,
+        template_name='recipes/recipe.html'):
     '''
     指定されたIDのレシピ詳細ページを出力します。
     レシピがis_draft == Trueの場合、作成したユーザのみ見ることができます。
 
     @param recipe_id: RecipeインスタンスのID
+    @param recipe_model: Recipeクラスまたはサブクラス (デフォルト: Recipe)
+    @param template_name: レンダするテンプレートパス
     @context recipe: Recipeインスタンス
                      (recipe.id == recipe_id)
     @return: 403レスポンス (recipe.is_draft == True and
                          request.user != recipe.user の場合)
     @return: 404レスポンス (指定されたIDのRecipeインスタンスが存在しない場合)
-    @return: 404レスポンス (指定レシピの作成ユーザがis_active=Falseの場合
-                         ただしレシピが商品化決定している場合を除く)
+    @return: 404レスポンス (指定レシピの作成ユーザがis_active=Falseの場合)
     @return: 200レスポンス (成功。詳細ページを表示)
     '''
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    recipe = get_object_or_404(recipe_model, pk=recipe_id)
     recipe_user = recipe.user
     if not recipe.is_awarded:
         user_is_active_or_404(recipe_user)
@@ -83,38 +85,38 @@ def show_recipe(request, recipe_id=None, template_name='recipes/recipe.html'):
 
 
 @getmethod
-def show_recipe_for_print(request, recipe_id=None):
+def show_recipe_for_print(request, recipe_id=None, recipe_model=Recipe,
+        template_name='recipes/recipe_print.html'):
     '''
     指定されたIDのレシピ詳細ページ(印刷向け)を出力します。
     条件はshow_recipeと同じです。
     '''
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    recipe = get_object_or_404(recipe_model, pk=recipe_id)
     if not recipe.is_awarded:
         user_is_active_or_404(recipe.user)
     if recipe.is_draft and request.user != recipe.user:
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
     recipe.set_request_user(request.user)
     d = {'recipe': recipe}
-    return render_to_response('recipes/recipe_print.html',
-        d, RequestContext(request))
+    return render_to_response(template_name, d, RequestContext(request))
 
 
 @getmethod
 @login_required
-def register_recipe(request, contest_id=None):
+def register_recipe(request, contest_id=None, contest_model=Contest,
+        recipe_form=forms.NewRecipeForm):
     '''
     レシピの新規作成フォームページを出力します。
+    コンテキストに含まれるformはContestモデルのrecipe_formメソッドが返す値です。
 
     @param contest_id: お題ID（なくても可）
-    @context form: NewRecipeFormインスタンス
+    @param contest_model: Contestクラスまたはサブクラス (デフォルト: Contest)
+    @param recipe_form: 出力するFormクラス (デフォルト: NewRecipeForm)
+    @context form: 指定したFormのインスタンス
     @return: 302レスポンス (ログインしていない場合)
     @return: 200レスポンス (成功。フォームを表示)
     '''
-    form = forms.NewRecipeForm()
-    if contest_id:
-        contest = get_object_or_404(Contest, pk=contest_id)
-        if hasattr(contest, 'recipe_form'):
-            form = contest.recipe_form(request.user)
+    form = recipe_form()
     d = {'form': form}
     return render_to_response('recipes/new_recipe_form.html',
         d, RequestContext(request))
@@ -122,11 +124,12 @@ def register_recipe(request, contest_id=None):
 
 @postmethod
 @login_required
-def register_recipe(request, contest_id=None):
+def register_recipe(request, contest_id=None, contest_model=Contest,
+        recipe_form=forms.NewRecipeForm):
     '''
     レシピデータを新規作成します。
-    forms.NewRecipeFormで定義された値を受け取ります。
-    必須項目はNewRecipeFormを参照してください。
+    form_classで定義された値を受け取ります。
+    必須項目はform_classにより決定されます。
     レシピの作成が成功した場合、編集ページにリダイレクトされます。
 
     Contextで返されるRecipeインスタンスは以下の状態になっています。
@@ -136,23 +139,24 @@ def register_recipe(request, contest_id=None):
     contest: 指定されたお題のID
 
     @param contest_id: お題ID (optional)
-    @context form: NewRecipeFormインスタンス (フォームがinvalidの場合)
+    @param contest_model: Contestクラスまたはサブクラス (デフォルト: Contest)
+    @context recipe_form: recipe_formインスタンス (フォームがinvalidの場合)
     @return: 403レスポンス (TODO: 指定のお題が存在しない場合)
     @return: 302レスポンス (ログインページへ。ログインしていない場合)
     @return: 302レスポンス (レシピ編集ページへ。作成に成功した場合)
     '''
-    form = forms.NewRecipeForm(request.POST, request.FILES)
+    form = recipe_form(request.POST, request.FILES)
     if not form.is_valid():
         return render_to_response('recipes/new_recipe_form.html',
             {'form': form}, RequestContext(request))
     recipe = form.save(commit=False)
     recipe.user = request.user
     if contest_id:
-        contest = Contest.objects.get(pk=contest_id)
+        contest = contest_model.objects.get(pk=contest_id)
         try:
             contest.pre_submit_recipe(request.user, recipe)
         except Contest.NotAllowedSubmit:
-            pass
+            pass  # ignored by contest
         else:
             recipe.contest = contest
     recipe.save()
@@ -201,12 +205,15 @@ def render_edit_recipe_page(request, recipe, form):
 
 @getmethod
 @login_required
-def edit_recipe(request, recipe_id=None):
+def edit_recipe(request, recipe_id=None, recipe_model=Recipe,
+        recipe_form=forms.RecipeForm):
     '''
     指定されたIDのレシピの編集画面を表示します。
     レシピを作成したユーザだけが表示を行うことができます。(recipe.user==request.user)
 
     @param recipe_id: レシピID
+    @param recipe_model: Recipeクラスまたはサブクラス (デフォルト: Recipe)
+    @param recipr_form: 出力するフォーム (デフォルト: RecipeForm)
     @context recipe: Recipeインスタンス
     @context directions: クエリセット。recipe.direction_set.all()
     @context form: RecipeFormインスタンス
@@ -217,7 +224,7 @@ def edit_recipe(request, recipe_id=None):
     @return: 404レスポンス (指定されたIDのレシピが存在しない場合)
     @return: 200レスポンス (成功。フォームを表示)
     '''
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    recipe = get_object_or_404(recipe_model, pk=recipe_id)
     if (request.user != recipe.user or \
         recipe.is_awarded or \
         (recipe.contest and recipe.published_at)):
@@ -228,7 +235,8 @@ def edit_recipe(request, recipe_id=None):
 
 @postmethod
 @login_required
-def edit_recipe(request, recipe_id=None):
+def edit_recipe(request, recipe_id=None, recipe_model=Recipe,
+        recipe_form=forms.RecipeForm):
     '''
     指定されたIDのレシピデータの変更を行います。
     レシピを作成したユーザだけが変更を行うことができます。(recipe.user==request.user)
@@ -239,20 +247,22 @@ def edit_recipe(request, recipe_id=None):
     復元することができます。
 
     @param recipe_id: レシピID
+    @param recipe_model: Recipeクラスまたはサブクラス (デフォルト: Recipe)
+    @param recipr_form: 出力するフォーム (デフォルト: RecipeForm)
     @return: 302レスポンス (ログインページへ。ログインしていない場合)
     @return: 403レスポンス (指定されたレシピの作成者がログインユーザではない場合
                          一度でも公開したことがあり、既にお題にひもづいている場合)
     @return: 404レスポンス (指定されたIDのレシピが存在しない場合)
     @return: 302レスポンス (レシピ編集ページへ。成功した場合)
     '''
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
-    if (request.user != recipe.user or \
-        recipe.is_awarded or \
+    recipe = get_object_or_404(recipe_model, pk=recipe_id)
+    if (request.user != recipe.user or
+        recipe.is_awarded or
         (recipe.contest and recipe.published_at)):
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
     recipe.encode_ingredients(request.POST.getlist('food'),
         request.POST.getlist('quantity'))
-    form = forms.RecipeForm(request.POST, request.FILES, instance=recipe)
+    form = recipe_form(request.POST, request.FILES, instance=recipe)
     if form.is_valid():
         recipe = form.save()
         messages.add_message(request, messages.INFO, u'レシピを保存しました。')
@@ -262,12 +272,13 @@ def edit_recipe(request, recipe_id=None):
 
 @postmethod
 @login_required
-def delete_recipe(request, recipe_id=None):
+def delete_recipe(request, recipe_id=None, recipe_model=Recipe):
     '''
     指定されたIDのレシピを削除します。
     レシピを作成したユーザだけが行うことができます。(recipe.user==request.user)
 
     @param recipe_id: レシピID
+    @param recipe_model: Recipeクラスまたはサブクラス (デフォルト: Recipe)
     @return: 302レスポンス (ログインページへ。ログインしていない場合)
     @return: 403レスポンス (指定されたレシピの作成者がログインユーザではない場合
                          商品化が決定している場合)
@@ -277,7 +288,7 @@ def delete_recipe(request, recipe_id=None):
     '''
     redirect_path = request.POST.get('redirect_path',
                                      settings.LOGIN_REDIRECT_URL)
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    recipe = get_object_or_404(recipe_model, pk=recipe_id)
     if recipe.user != request.user or recipe.is_awarded:
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
     message = u'%s を削除しました。' % recipe.name
@@ -288,26 +299,28 @@ def delete_recipe(request, recipe_id=None):
 
 @postmethod
 @login_required
-def mail_recipe(request, recipe_id=None):
+def mail_recipe(request, recipe_id=None, recipe_model=Recipe,
+        template_name='recipes/email/mail_recipe.txt'):
     '''
     指定されたIDのレシピの情報をPOSTのalter_emailで指定されたアドレスにメールで送信します。
     ログインユーザだけが行うことができます。
     alter_emailの値がprofile.alter_emailと異なる場合はprofile.alter_emailを変更します。
 
     @param recipe_id: レシピID
+    @param recipe_model: Recipeクラスまたはサブクラス (デフォルト: Recipe)
     @return: 302レスポンス (ログインページへ。ログインしていない場合)
     @return: 404レスポンス (指定されたIDのレシピが存在しない場合)
     @return: 200レスポンス (レシピのJSONデータを返す。成功した場合)
     '''
     site = Site.objects.get_current()
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    recipe = get_object_or_404(recipe_model, pk=recipe_id)
     profile = request.user.get_profile()
     email = request.POST.get('alter_email', profile.alter_email)
     if email != profile.alter_email:
         profile.alter_email = email
         profile.save()
     c = Context({'user': request.user, 'recipe': recipe})
-    t = loader.get_template('recipes/email/mail_recipe.txt')
+    t = loader.get_template(template_name)
     subject = u'[%s] %s' % (site.name, recipe.name)
     body = t.render(c)
     task = SendEmailTask(dict(subject=subject, body=body,
@@ -320,7 +333,8 @@ def mail_recipe(request, recipe_id=None):
 
 @postmethod
 @login_required
-def submit_recipe_to_contest(request, recipe_id):
+def submit_recipe_to_contest(request, recipe_id, recipe_model=Recipe,
+        contest_model=Contest):
     '''
     指定されたIDのレシピをPOSTのcontestの値で指定されたお題に投稿します。
     レシピの作成ユーザだけが行うことができます。
@@ -328,18 +342,20 @@ def submit_recipe_to_contest(request, recipe_id):
     contest: 指定されたIDのContestインスタンス
 
     @param recipe_id: レシピID
+    @param recipe_model: Recipeクラスまたはサブクラス (デフォルト: Recipe)
+    @param contest_model: Contestクラスまたはサブクラス (デフォルト: Contest)
     @return: 302レスポンス (ログインページへ。ログインしていない場合)
     @return: 404レスポンス (指定されたIDのレシピが存在しない場合)
     @return: 403レスポンス (ログインユーザが作成者ではない場合)
     @return: 403レスポンス (TODO: 指定のお題が存在しない場合)
     @return: 200レスポンス (レシピのJSONデータを返す。成功した場合)
     '''
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    recipe = get_object_or_404(recipe_model, pk=recipe_id)
     if request.user != recipe.user:
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
     contest_id = request.POST.get('contest', None)
     if contest_id:
-        contest = Contest.objects.get(pk=contest_id)
+        contest = contest_model.objects.get(pk=contest_id)
         recipe.contest = contest
         recipe.save()
         json = serializers.serialize('json', [contest])
@@ -373,13 +389,14 @@ def show_voting_users(request, recipe_id):
 
 
 @postmethod
-def copy_recipe(request, recipe_id=None):
+def copy_recipe(request, recipe_id=None, recipe_model=Recipe):
     '''
     指定されたIDのレシピをコピーして、ログインユーザのレシピを作成します。
     作成者以外の場合、下書きをコピーすることはできません。
     結果ステータスを含むJSONを返します。
 
     @param recipe_id: レシピID
+    @param recipe_model: Recipeクラスまたはサブクラス (デフォルト: Recipe)
     @return: 403レスポンス (ログインしていない場合)
     @return: 403レスポンス (指定されたレシピが下書きであり、作成者がログインユーザではない場合)
     @return: 404レスポンス (指定されたIDのレシピが存在しない場合)
@@ -389,7 +406,7 @@ def copy_recipe(request, recipe_id=None):
     if request.user is None or not request.user.is_active:
         return HttpResponse(failure_json, 'application/json', 403)
     try:
-        recipe = Recipe.objects.get(pk=recipe_id)
+        recipe = recipe_model.objects.get(pk=recipe_id)
     except Recipe.DoesNotExist:
         return HttpResponse(failure_json, 'application/json', 404)
     if not recipe.user.is_active:

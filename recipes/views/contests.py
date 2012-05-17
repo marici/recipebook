@@ -128,7 +128,8 @@ def show_recipes(request, contest_id=None, page=1):
 
 @postmethod
 @login_required
-def submit_recipe(request, contest_id=None, recipe_id=None):
+def submit_recipe(request, contest_id=None, recipe_id=None,
+        contest_model=Contest, recipe_model=Recipe):
     '''
     指定されたIDのお題に指定されたIDのレシピを投稿します。
     投稿されたレシピは、recipe.contest = contestとなります。
@@ -138,17 +139,19 @@ def submit_recipe(request, contest_id=None, recipe_id=None):
 
     @param contest_id: ContestインスタンスのID
     @param recipe_id: RecipeインスタンスのID
+    @param contest_model: Contestクラスまたはサブクラス (デフォルト: Contest)
+    @param recipe_model: Recipeクラスまたはサブクラス (デフォルト: Recipe)
     @return: 200レスポンス (成功。JSONを返す)
     @return: 302レスポンス (ログインしていない場合。ログインページへ)
     @return: 403レスポンス (recipe.context != None or
                          request.user != recipe.user の場合)
     @return: 404レスポンス (指定されたIDのRecipe, Contestインスタンスが存在しない場合)
     '''
-    contest = get_object_or_404(Contest, pk=contest_id)
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    contest = get_object_or_404(contest_model, pk=contest_id)
+    recipe = get_object_or_404(recipe_model, pk=recipe_id)
     try:
         contest.pre_submit_recipe(request.user, recipe)
-    except Contest.NotAllowedSubmit:
+    except contest_model.NotAllowedSubmit:
         return render_to_response_of_class(HttpResponseForbidden, '403.html')
     recipe.contest = contest
     recipe.save()
