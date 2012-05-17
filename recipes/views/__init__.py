@@ -104,7 +104,8 @@ def show_recipe_for_print(request, recipe_id=None, recipe_model=Recipe,
 @getmethod
 @login_required
 def register_recipe(request, contest_id=None, contest_model=Contest,
-        recipe_form=forms.NewRecipeForm):
+        recipe_form=forms.NewRecipeForm,
+        template_name='recipes/new_recipe_form.html'):
     '''
     レシピの新規作成フォームページを出力します。
     コンテキストに含まれるformはContestモデルのrecipe_formメソッドが返す値です。
@@ -112,20 +113,23 @@ def register_recipe(request, contest_id=None, contest_model=Contest,
     @param contest_id: お題ID（なくても可）
     @param contest_model: Contestクラスまたはサブクラス (デフォルト: Contest)
     @param recipe_form: 出力するFormクラス (デフォルト: NewRecipeForm)
+    @param template_name: レンダするテンプレートパス
     @context form: 指定したFormのインスタンス
     @return: 302レスポンス (ログインしていない場合)
     @return: 200レスポンス (成功。フォームを表示)
     '''
     form = recipe_form()
     d = {'form': form}
-    return render_to_response('recipes/new_recipe_form.html',
-        d, RequestContext(request))
+    return render_to_response(template_name, d, RequestContext(request))
 
 
 @postmethod
 @login_required
 def register_recipe(request, contest_id=None, contest_model=Contest,
-        recipe_form=forms.NewRecipeForm):
+        recipe_form=forms.NewRecipeForm,
+        template_name='recipes/new_recipe_form.html',
+        redirect_to=lambda recipe: reverse('recipes-edit',
+            kwargs={'recipe_id': recipe.id})):
     '''
     レシピデータを新規作成します。
     form_classで定義された値を受け取ります。
@@ -141,14 +145,16 @@ def register_recipe(request, contest_id=None, contest_model=Contest,
     @param contest_id: お題ID (optional)
     @param contest_model: Contestクラスまたはサブクラス (デフォルト: Contest)
     @context recipe_form: recipe_formインスタンス (フォームがinvalidの場合)
+    @param template_name: レンダするテンプレートパス
+    @param redirect_to: recipeインスタンスを受け取りリダイレクトパスを返すcallable
     @return: 403レスポンス (TODO: 指定のお題が存在しない場合)
     @return: 302レスポンス (ログインページへ。ログインしていない場合)
     @return: 302レスポンス (レシピ編集ページへ。作成に成功した場合)
     '''
     form = recipe_form(request.POST, request.FILES)
     if not form.is_valid():
-        return render_to_response('recipes/new_recipe_form.html',
-            {'form': form}, RequestContext(request))
+        return render_to_response(template_name, {'form': form},
+                RequestContext(request))
     recipe = form.save(commit=False)
     recipe.user = request.user
     if contest_id:
@@ -160,8 +166,8 @@ def register_recipe(request, contest_id=None, contest_model=Contest,
         else:
             recipe.contest = contest
     recipe.save()
-    return HttpResponseRedirect(reverse('recipes-edit',
-                                        kwargs={'recipe_id': recipe.id}))
+    redirect_path = redirect_to(recipe)
+    return HttpResponseRedirect(redirect_path)
 
 
 @postmethod
