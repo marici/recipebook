@@ -105,7 +105,8 @@ def show_recipe_for_print(request, recipe_id=None, recipe_model=Recipe,
 @login_required
 def register_recipe(request, contest_id=None, contest_model=Contest,
         recipe_form=forms.NewRecipeForm,
-        template_name='recipes/new_recipe_form.html'):
+        template_name='recipes/new_recipe_form.html',
+        redirect_to=None):
     '''
     レシピの新規作成フォームページを出力します。
     コンテキストに含まれるformはContestモデルのrecipe_formメソッドが返す値です。
