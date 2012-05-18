@@ -105,6 +105,7 @@ def show_recipe_for_print(request, recipe_id=None, recipe_model=Recipe,
 @login_required
 def register_recipe(request, contest_id=None, contest_model=Contest,
         recipe_form=forms.NewRecipeForm,
+        form_generator=None,
         template_name='recipes/new_recipe_form.html',
         redirect_to=None):
     '''
@@ -114,12 +115,17 @@ def register_recipe(request, contest_id=None, contest_model=Contest,
     @param contest_id: お題ID（なくても可）
     @param contest_model: Contestクラスまたはサブクラス (デフォルト: Contest)
     @param recipe_form: 出力するFormクラス (デフォルト: NewRecipeForm)
+    @param form_generator: Formインスタンスを生成する関数
     @param template_name: レンダするテンプレートパス
     @context form: 指定したFormのインスタンス
     @return: 302レスポンス (ログインしていない場合)
     @return: 200レスポンス (成功。フォームを表示)
     '''
-    form = recipe_form()
+    kwargs = {}
+    if contest_id:
+        contest = get_object_or_404(contest_model, pk=contest_id)
+        kwargs['contest'] = contest
+    form = form_generator(**kwargs) if form_generator else recipe_form()
     d = {'form': form}
     return render_to_response(template_name, d, RequestContext(request))
 
