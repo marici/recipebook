@@ -134,6 +134,7 @@ def register_recipe(request, contest_id=None, contest_model=Contest,
 @login_required
 def register_recipe(request, contest_id=None, contest_model=Contest,
         recipe_form=forms.NewRecipeForm,
+        form_generator=None,
         template_name='recipes/new_recipe_form.html',
         redirect_to=lambda recipe: reverse('recipes-edit',
             kwargs={'recipe_id': recipe.id})):
