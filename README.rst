@@ -16,9 +16,9 @@ Djangoフレームワークの上に構築されており、以下の特徴が�
 * Apache ActiveMQによるメール送信などのタスクキューイング
 * Amazon S3へのアップロードファイル保存
 
-ドキュメント_ を見ながら、「レシピブック」を試してみましょう。
+`ドキュメント`_ を見ながら、「レシピブック」を試してみましょう。
 
-.. ドキュメント_: http://recipebook.jp/document.php
+.. _`ドキュメント`: http://recipebook.jp/document.php
 
 公式サイト
 ----------
@@ -33,5 +33,6 @@ MIT License
 開発元
 ------
 
-株式会社マリーチ (Marici, Inc.)
-http://www.marici.co.jp
+`株式会社マリーチ`_ (Marici, Inc.)
+
+.. _`株式会社マリーチ`: http://www.marici.co.jp
