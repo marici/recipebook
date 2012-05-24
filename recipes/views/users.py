@@ -552,18 +552,17 @@ def validate_change_email(request, user_id=None, key=None):
 
 
 @getmethod
-def login(request):
+def login(request, template_name='registration/login.html'):
     '''
     ログインフォームを表示します。
     '''
     d = {'form': forms.AuthenticationForm(),
         'next': request.REQUEST.get('next', '')}
-    return render_to_response('registration/login.html', d,
-            RequestContext(request))
+    return render_to_response(template_name, d, RequestContext(request))
 
 
 @postmethod
-def login(request):
+def login(request, template_name=None):
     '''
     アクセスユーザのログインを行います。
     項目はAuthenticationFormの定義に従います。
