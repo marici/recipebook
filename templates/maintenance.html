@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends base_template|default:"base.html" %}
 
 {% block title %}メンテナンス中です - {{ current_site.name }}{% endblock %}
 
