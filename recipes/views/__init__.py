@@ -159,14 +159,22 @@ def register_recipe(request, contest_id=None, contest_model=Contest,
     @return: 302レスポンス (ログインページへ。ログインしていない場合)
     @return: 302レスポンス (レシピ編集ページへ。作成に成功した場合)
     '''
-    form = recipe_form(request.POST, request.FILES)
+    kwargs = {}
+    if contest_id:
+        contest = get_object_or_404(contest_model, pk=contest_id)
+        kwargs = {
+            'data': request.POST,
+            'files': request.FILES,
+            'contest': contest,
+        }
+    form = (form_generator(**kwargs) if form_generator else
+            recipe_form(request.POST, request.FILES))
     if not form.is_valid():
         return render_to_response(template_name, {'form': form},
                 RequestContext(request))
     recipe = form.save(commit=False)
     recipe.user = request.user
     if contest_id:
-        contest = contest_model.objects.get(pk=contest_id)
         try:
             contest.pre_submit_recipe(request.user, recipe)
         except Contest.NotAllowedSubmit:
