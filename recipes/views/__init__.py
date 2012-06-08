@@ -288,8 +288,7 @@ def edit_recipe(request, recipe_id=None, recipe_model=Recipe,
     if form.is_valid():
         recipe = form.save()
         messages.add_message(request, messages.INFO, u'レシピを保存しました。')
-    return HttpResponseRedirect(reverse('recipes-edit',
-                                        kwargs={'recipe_id': recipe.id}))
+    return HttpResponseRedirect(request.path)
 
 
 @postmethod
