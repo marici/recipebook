@@ -121,7 +121,7 @@ def show_recipes(request, contest_id=None, page=1):
                             kwargs={'contest_id': contest.id}),
               'name': contest.name}]
     d = {'title': u'%s に投稿されたレシピ一覧' % contest.name,
-         'page_obj': page_obj, 'links': links}
+         'contest': contest, 'page_obj': page_obj, 'links': links}
     return render_to_response('recipes/recipes.html',
             d, RequestContext(request))
 
