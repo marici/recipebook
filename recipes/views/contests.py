@@ -101,7 +101,7 @@ def show_contest(request, contest_id=None, model=Contest,
             d, RequestContext(request))
 
 
-def show_recipes(request, contest_id=None, page=1):
+def show_recipes(request, contest_id=None, contest_model=Contest, page=1):
     '''
     お題に対するレシピの一覧を新しい順に表示します。
     対象になるのは以下のレシピです。
@@ -114,7 +114,7 @@ def show_recipes(request, contest_id=None, page=1):
     @return: 400レスポンス (お題が存在しないか、TODO: published_atが未来の場合)
     @return: 200レスポンス (成功)
     '''
-    contest = get_object_or_404(Contest, pk=contest_id)
+    contest = get_object_or_404(contest_model, pk=contest_id)
     recipes = contest.recipe_set.filter(is_draft=False)
     page_obj = Paginator(recipes, per_page).page(page)
     links = [{'url': urlresolvers.reverse('recipes-contests-show',
