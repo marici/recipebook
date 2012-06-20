@@ -97,6 +97,9 @@ class Feeling(models.Model):
         feeling_registry.clear()
         super(Feeling, self).save(force_insert, force_update)
 
+    def to_dict(self):
+        return {'name': self.name}
+
     def __unicode__(self):
         return self.name
 

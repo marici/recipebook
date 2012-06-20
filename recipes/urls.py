@@ -177,3 +177,22 @@ urlpatterns += patterns('recipes.views.users',
         'show_favorite_users',
         name='recipes-users-favorite-users-show-with-page'),
 )
+
+urlpatterns += patterns('recipes.views.api',
+    url(r'^api/contest/list/(?P<output_format>\w+)$', 'contest_api',
+        name='recipes-api-contest'),
+    url(r'^api/contest/detail/(?P<contest_id>\d+)/(?P<output_format>\w+)$',
+       'contest_detail_api', name='recipes-api-contest-detail'),
+    url(r'^api/recipe/list/(?P<user_id>\w+)/(?P<output_format>\w+)$',
+        'recipe_list_api', name='recipes-api-recipe-list'),
+    url(r'^api/recipe/make$', 'make_new_recipe',
+        name='recipes-api-recipe-make'),
+    url(r'^api/recipe/make/(?P<contest_id>\d+)$',
+        'make_new_recipe', name='recipes-api-recipe-make-to-contest'),
+    url(r'^api/recipe/edit/(?P<recipe_id>\d+)$',
+        'edit_recipe', name='recipes-api-recipe-edit'),
+    url(r'^api/login/(?P<output_format>\w+)$',
+        'login_api', name='api-login'),
+    url(r'^api/outer-serviec/login/(?P<service_name>\w+)$',
+        'outer_service_login_api', name='api-outer-login')
+)

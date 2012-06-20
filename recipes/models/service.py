@@ -87,6 +87,10 @@ class Contest(models.Model):
             ctxd['top_award_recipes'] = award_recipes[:2]
             ctxd['award_recipes'] = award_recipes[2:]
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('recipes-contests-show', [str(self.id)])
+
     def pre_submit_recipe(self, user, recipe):
         if recipe.user != user or recipe.contest:
             raise self.NotAllowedSubmit()
@@ -150,6 +154,16 @@ class Contest(models.Model):
                  [ing.name for ing in self.ingredients.all()])
         }
         return d
+
+    def to_dict(self):
+        return {
+            'name':  self.name,
+            'id': self.id,
+            'dish': self.dish.name if self.dish else None,
+            'image': self.image.url if self.image else None,
+            'description': self.description,
+            'feeling': self.feeling.name if self.feeling else None,
+        }
 
 
 class ReviewedContest(models.Model):

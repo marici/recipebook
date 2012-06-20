@@ -115,6 +115,15 @@ class UserProfile(models.Model):
     def __post_save_task__(self):
         return SyncS3Task.from_model(self), settings.QUEUENAME_SENDS3
 
+    def to_dict(self):
+        return {
+            'profile_text': self.profile_text,
+            'blog_url': self.blog_url,
+            'icon': self.icon.url if self.icon else None,
+            'karma': self.karma,
+        }
+
+
 
 def _create_unique_photo_path(instance, filename, path):
     if instance.photo:
@@ -368,6 +377,21 @@ class Recipe(models.Model):
 
     def __post_save_task__(self):
         return SyncS3Task.from_model(self), settings.QUEUENAME_SENDS3
+
+    def to_dict(self):
+        return {
+            'name':  self.name,
+            'photo': self.photo.url if self.photo else None,
+            'introduction': self.introduction,
+            'ingredients': self.ingredients,
+            'num_people': self.num_people,
+            'tips': self.tips,
+            'is_draft': self.is_draft,
+            'feeling': self.feeling.name if self.feeling else None,
+            'user': self.user_id,
+            'contest': self.contest.name if self.contest else None,
+            'direction': list(self.ordered_directions().values()),
+        }
 
 
 class Direction(models.Model):
