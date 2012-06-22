@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.localflavor',
     'django.contrib.messages',
+    'django_plist',
     'maricilib.django.apps.sitenews',
     'maricilib.django.apps.documents',
     'maricilib.django.apps.search',
@@ -205,3 +206,6 @@ FEEDBACK_SENDMAIL_FROM = ''
 FEEDBACK_SENDMAIL_TO = (
 #    'mailaddress',
 )
+SERIALIZATION_MODULES = {
+    'json': 'wadofstuff.django.serializers.json'
+}

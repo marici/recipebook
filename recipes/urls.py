@@ -192,7 +192,5 @@ urlpatterns += patterns('recipes.views.api',
     url(r'^api/recipe/edit/(?P<recipe_id>\d+)$',
         'edit_recipe', name='recipes-api-recipe-edit'),
     url(r'^api/login/(?P<output_format>\w+)$',
-        'login_api', name='api-login'),
-    url(r'^api/outer-serviec/login/(?P<service_name>\w+)$',
-        'outer_service_login_api', name='api-outer-login')
+        'login_api', name='api-login')
 )
