@@ -203,6 +203,19 @@ class RecipeForm(forms.Form):
         return recipe
 
 
+def login_required(func):
+    '''
+    ログインしてなければNotLoginステータスを返すAPIデコレータ
+    '''
+    def decorator(request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return func(request, *args, **kwargs)
+        else:
+            return HttpResponse(build_error_plist('NotLogin'))
+    return decorator
+
+
+@login_required
 def contest_api(request, output_format='JSON', model=Contest):
     '''
     コンテスト一覧に使用するためのAPI
@@ -220,6 +233,7 @@ def contest_api(request, output_format='JSON', model=Contest):
     return HttpResponse(text)
 
 
+@login_required
 def contest_detail_api(request, contest_id=None,
         output_format='JSON', model=Contest):
     '''
@@ -241,6 +255,7 @@ def contest_detail_api(request, contest_id=None,
     return status
 
 
+@login_required
 def recipe_list_api(request, user_id=None, output_format='JSON', model=Recipe):
     '''
     ユーザにひもづいたレシピをとってきて、コンテストに登録していなかったら
@@ -269,6 +284,7 @@ def recipe_list_api(request, user_id=None, output_format='JSON', model=Recipe):
 
 
 @csrf_exempt
+@login_required
 def make_new_recipe(request, model=Recipe):
     try:
         if request.method == 'POST':
@@ -286,6 +302,7 @@ def make_new_recipe(request, model=Recipe):
 
 
 @csrf_exempt
+@login_required
 def edit_recipe(request, recipe_id=None, model=Recipe):
     status = None
     try:
@@ -332,8 +349,8 @@ def get_auth_info(user, output_format):
     return text
 
 
-def build_error_plist():
-    dictionary = {'status': 'Error'}
+def build_error_plist(status='Error'):
+    dictionary = {'status': status}
     text = render_dictionary(dictionary)
     return text
 
