@@ -293,7 +293,8 @@ def edit_recipe(request, recipe_id=None, recipe_model=Recipe,
 
 @postmethod
 @login_required
-def delete_recipe(request, recipe_id=None, recipe_model=Recipe):
+def delete_recipe(request, recipe_id=None, recipe_model=Recipe,
+        redirect_path=None):
     '''
     指定されたIDのレシピを削除します。
     レシピを作成したユーザだけが行うことができます。(recipe.user==request.user)
@@ -307,7 +308,7 @@ def delete_recipe(request, recipe_id=None, recipe_model=Recipe):
     @return: 302レスポンス (POSTのredirect_pathの値、
                          またはsettings.LOGIN_REDIRECT_URLへ。成功した場合)
     '''
-    redirect_path = request.POST.get('redirect_path',
+    redirect_path = (request.POST.get('redirect_path', redirect_path) or
                                      settings.LOGIN_REDIRECT_URL)
     recipe = get_object_or_404(recipe_model, pk=recipe_id)
     if recipe.user != request.user or recipe.is_awarded:
