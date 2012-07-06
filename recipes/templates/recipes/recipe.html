@@ -232,7 +232,6 @@
     
     <form id="generic_form" action="" method="POST">{% csrf_token %}
         <input type="hidden" name="recipe_id" value="{{ recipe.pk }}">
-        <input type="hidden" name="redirect_path" value="{% url recipes-users-home %}">
     </form>
     
 {% endblock %}
