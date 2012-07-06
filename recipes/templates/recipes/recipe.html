@@ -34,7 +34,7 @@
                 <li id="submitLi"{% if recipe.is_draft %} style="display:none"{% endif %}><a id="submitToContestButton" href="{% url recipes-submit recipe_id=recipe.id %}">お題に応募</a></li>
             {% endif %}
             {% if not recipe.is_awarded %}
-                <li><a id="deleteButton" href="{% url recipes-delete recipe_id=recipe.id %}">削除する</a></li>
+                <li><a id="deleteButton" href="./delete/">削除する</a></li>
             {% endif %}
     	{% else %}
             <li id="addFavoriteButton" {% if recipe.is_favorite %}style="display:none"{% endif %}>
