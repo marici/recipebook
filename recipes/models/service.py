@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from .master import *
 
+# 期限なしの場合に便宜的に設定される日付
+_future = datetime(2100, 1, 1)
 
 # =======================================================
 # 運営しながら作成するデータ
@@ -59,8 +61,10 @@ class Contest(models.Model):
     created_at = models.DateTimeField(u'作成日',
             auto_now_add=True)
     published_at = models.DateTimeField(u'募集開始日')
-    closed_at = models.DateTimeField(u'募集締切日')
-    finished_at = models.DateTimeField(u'審査結果発表日')
+    closed_at = models.DateTimeField(
+        u'募集締切日', null=True, blank=True)
+    finished_at = models.DateTimeField(
+        u'審査結果発表日', null=True, blank=True)
     is_reviewing = models.BooleanField(u'審査中', default=False)
     is_finished = models.BooleanField(u'審査完了', default=False)
     comment = models.TextField(u'選評', null=True, blank=True)
@@ -86,6 +90,9 @@ class Contest(models.Model):
         now = datetime.now()
         return (self.is_finished and self.finished_at and
                 self.finished_at <= now)
+
+    def is_unlimited(self):
+        return self.closed_at is None
 
     def get_left_days(self):
         return (self.closed_at - datetime.now()).days

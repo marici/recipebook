@@ -59,7 +59,7 @@ class ContestManager(models.Manager):
 
     def get_current_contests(self):
         now = datetime.now()
-        return self.filter(published_at__lte=now).filter(closed_at__gt=now)
+        return self.filter(published_at__lte=now).exclude(closed_at__lte=now)
 
     def get_closed_contests_qs(self):
         now = datetime.now()

@@ -34,7 +34,7 @@
     {% for contest in current_contests %}
         <li>
         <a href="{% url recipes-contests-show contest_id=contest.id %}">{{ contest.name }}</a>
-        (あと {{ contest.left_days }}日)</li>
+        {% if not contest.is_unlimited %}(あと {{ contest.left_days }}日){% endif %}</li>
     {% endfor %}
     <!-- /ul01 --></ul>
     <!-- /div_beta02_inner --></div>

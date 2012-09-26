@@ -1,3 +1,4 @@
+{% if not contest.is_unlimited %}
 <table summary="レシピを募集中のお題" class="tbl02">
     <tr>
         <th>募集期間</th>
@@ -15,3 +16,4 @@
         <td>{{ contest.finished_at|date:"n月j日 G:i" }}</td>
     </tr>
 </table>
+{% endif %}

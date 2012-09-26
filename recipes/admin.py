@@ -97,7 +97,7 @@ class ContestAdmin(admin.ModelAdmin):
         obj.save()
 
     def validate_flags(self, obj):
-        if datetime.now() < obj.closed_at:
+        if obj.closed_at is None or datetime.now() < obj.closed_at:
             obj.is_reviewing = False
             obj.is_finished = False
             obj.comment = None

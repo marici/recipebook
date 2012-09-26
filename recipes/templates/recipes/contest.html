@@ -45,10 +45,12 @@
     
     <p class="p01">{{ contest.description|linebreaksbr }}</p>
     <p class="p02">{% if contest.image %}<img width="129" src="{{ contest.image|thumbnail:"129x129" }}" alt="{{ contest.name }}" />{% endif %}</p>
-    <dl class="dl01">
-    <dd class="dd01"><span class="spn01">募集期間</span><span class="spn02">{{ contest.published_at|date:"n月j日 G:i" }} から{{ contest.closed_at|date:"n月j日 G:i" }} まで</span></dd>
-    <dd class="dd01"><span class="spn01">{% if contest.is_finished %}結果発表日{% else %}結果発表予定日{% endif %}</span><span class="spn02">{{ contest.finished_at|date:"n月j日 G:i" }}</span></dd>
-    </dl>
+    {% if not contest.is_unlimited %}
+      <dl class="dl01">
+      <dd class="dd01"><span class="spn01">募集期間</span><span class="spn02">{{ contest.published_at|date:"n月j日 G:i" }} から{{ contest.closed_at|date:"n月j日 G:i" }} まで</span></dd>
+      <dd class="dd01"><span class="spn01">{% if contest.is_finished %}結果発表日{% else %}結果発表予定日{% endif %}</span><span class="spn02">{{ contest.finished_at|date:"n月j日 G:i" }}</span></dd>
+      </dl>
+    {% endif %}
     
     </div>
     </div>

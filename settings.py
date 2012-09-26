@@ -138,6 +138,7 @@ INSTALLED_APPS = (
     'maricilib.django.apps.taskqueue',
     'maricilib.django.apps.feedback',
     'recipes',
+    'south',
 )
 
 # A sample logging configuration. The only tangible logging
