@@ -48,7 +48,7 @@ def render_to_response_device(request, template_name, *args, **kwargs):
         return template_name
 
     user_agent = request.META.get('HTTP_USER_AGENT')
-    if 'iPhone' in user_agent:
+    if user_agent and 'iPhone' in user_agent:
         template_name = find_template(template_name, 'iphone')
     from django.shortcuts import render_to_response
     return render_to_response(template_name, *args, **kwargs)
