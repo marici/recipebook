@@ -26,6 +26,7 @@ from django.conf import settings
 from maricilib.taskqueue import TaskQueue
 
 taskqueue = None
+default_queue = "default"
 
 def get_taskqueue():
     global taskqueue
