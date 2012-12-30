@@ -72,9 +72,9 @@ class Document(models.Model):
     created_at = models.DateTimeField(u"作成日時", auto_now_add=True)
     updated_at = models.DateTimeField(u"最終更新日時", editable=False)
     creator = models.ForeignKey(User, editable=False, verbose_name=u"作成者",
-                                related_name="create_document_set")
+                                null=True, related_name="create_document_set")
     updater = models.ForeignKey(User, editable=False, verbose_name=u"更新者",
-                                related_name="update_document_set")
+                                null=True, related_name="update_document_set")
 
     def __unicode__(self):
         return self.title

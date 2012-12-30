@@ -37,10 +37,10 @@
       "updated_at": "2009-09-02 15:03:09", 
       "image_description": "", 
       "image": "", 
-      "creator": 1, 
+      "creator": null, 
       "number": 1, 
       "label": "tos", 
-      "updater": 1, 
+      "updater": null, 
       "syntax": null, 
       "created_at": "2009-09-02 15:03:09"
     }
@@ -55,10 +55,10 @@
       "updated_at": "2009-09-02 15:03:40", 
       "image_description": "", 
       "image": "", 
-      "creator": 1, 
+      "creator": null, 
       "number": 2, 
       "label": "privacy", 
-      "updater": 1, 
+      "updater": null, 
       "syntax": null, 
       "created_at": "2009-09-02 15:03:40"
     }
@@ -73,10 +73,10 @@
       "updated_at": "2009-09-02 15:04:24", 
       "image_description": "", 
       "image": "", 
-      "creator": 1, 
+      "creator": null, 
       "number": 3, 
       "label": "company", 
-      "updater": 1, 
+      "updater": null, 
       "syntax": null, 
       "created_at": "2009-09-02 15:04:24"
     }
@@ -91,10 +91,10 @@
       "updated_at": "2009-09-02 15:04:36", 
       "image_description": "", 
       "image": "", 
-      "creator": 1, 
+      "creator": null, 
       "number": 4, 
       "label": "help", 
-      "updater": 1, 
+      "updater": null, 
       "syntax": null, 
       "created_at": "2009-09-02 15:04:36"
     }
