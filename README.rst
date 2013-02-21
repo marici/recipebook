@@ -18,7 +18,7 @@ Djangoフレームワークの上に構築されており、以下の特徴が�
 
 `ドキュメント`_ を見ながら、「レシピブック」を試してみましょう。
 
-.. _`ドキュメント`: http://recipebook.jp/document.php
+.. _`ドキュメント`: http://recipebook.jp/document.html
 
 公式サイト
 ----------
